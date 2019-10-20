@@ -1,0 +1,14 @@
+{
+  "name": "sortview",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "lnp",
+  "license": "MIT",
+  "dependencies": {
+    "@types/jquery": "^3.3.31"
+  }
+}

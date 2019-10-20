@@ -1,0 +1,115 @@
+.canvas {
+  border: #232323 solid 1px;
+}
+h1 {
+  color: #0099ff;
+  text-align: center;
+}
+.desc {
+  text-align: center;
+  color: #0099ff;
+}
+.inputarea {
+  text-align: center;
+}
+.vib {
+  display: block;
+  width: 800px;
+  margin: 0 auto;
+}
+.viewbox {
+  text-align: center;
+  top: 100px;
+  position: relative;
+}
+.point {
+  top: 60px;
+  position: relative;
+}
+.pp {
+  position: relative;
+  left: 203px;
+  color: #ff4747;
+  font-size: 30px;
+  top: -50px;
+}
+.pd {
+  position: relative;
+  left: 98px;
+  color: #48ad59;
+  font-size: 30px;
+}
+.ps {
+  position: relative;
+  left: 160px;
+  color: #178bce;
+  font-size: 30px;
+}
+.btn {
+  color: #fff;
+  background-color: #0099ff;
+  margin-top: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  transition: all 0.2s ease-out 0s;
+}
+.btn:hover {
+  background-color: #0077ff;
+  border-radius: 10px;
+}
+.blockbox {
+  display: inline-block;
+  width: 80px;
+  height: 20px;
+  vertical-align: bottom;
+  background-color: #0099ff;
+  color: #fff;
+  border-radius: 5px;
+  position: absolute;
+}
+.inpu {
+  border: #0099ff solid 1px;
+  border-radius: 5px;
+  font-size: 20px;
+  width: 76px;
+  margin-right: -1px;
+  color: #0099ff;
+  text-align: center;
+}
+.one {
+  left: 85px;
+  height: 49px;
+  background-color: #00dda6;
+}
+.two {
+  left: 170px;
+  height: 96px;
+  background-color: #0077ff;
+}
+.three {
+  left: 255px;
+  height: 32px;
+  background-color: #e62a53;
+}
+.four {
+  left: 340px;
+  height: 128px;
+  background-color: #f0cd08;
+}
+.five {
+  left: 425px;
+  height: 57px;
+  background-color: #289714;
+}
+.six {
+  left: 510px;
+  height: 64px;
+  background-color: #842ab8;
+}
+.seven {
+  left: 595px;
+  height: 22px;
+  background-color: #db5000;
+}

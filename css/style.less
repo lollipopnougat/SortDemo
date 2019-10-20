@@ -1,0 +1,134 @@
+@bordercolor: #232323;
+@bordersize: 1px;
+@datacolor: #0099ff;
+@datawidth: 80px;
+
+.canvas {
+  border: @bordercolor solid @bordersize;
+}
+h1 {
+  color: @datacolor;
+  text-align: center;
+}
+.desc {
+  text-align: center;
+  color: @datacolor;
+}
+.inputarea {
+  text-align: center;
+}
+.vib {
+  display: block;
+  width: 800px;
+  margin: 0 auto;
+}
+.viewbox {
+  text-align: center;
+  top: 100px;
+  position: relative;
+}
+.point {
+  //text-align: center;
+  top: 60px;
+  position: relative;
+}
+.pp {
+  position: relative;
+  left: 203px; //118 203 288 373 456 543 627
+  color: #ff4747;
+  font-size: 30px;
+  top: -50px;
+}
+.pd {
+  position: relative;
+  left: 98px; //118 203 288 373 456 543 627
+  color: #48ad59;
+  font-size: 30px;
+}
+.ps {
+  position: relative;
+  left: 160px; //118 203 288 373 456 543 627
+  color: #178bce;
+  font-size: 30px;
+}
+.btn {
+  color: #fff;
+  background-color: #0099ff;
+  margin-top: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  transition: all 0.2s ease-out 0s;
+}
+.btn:hover {
+  background-color: #0077ff;
+  border-radius: 10px;
+}
+.blockbox {
+  display: inline-block;
+  width: @datawidth;
+  height: 20px;
+  vertical-align: bottom;
+  background-color: @datacolor;
+  color: #fff;
+  border-radius: 5px;
+  // transition: all 1s ease-in-out 0s;
+  position: absolute;
+}
+
+.inpu {
+  border: #0099ff solid 1px;
+  border-radius: 5px;
+  font-size: 20px;
+  width: @datawidth * 0.95;
+  margin-right: -1px;
+  color: #0099ff;
+  text-align: center;
+}
+
+.dataleft(@num) {
+  left: ((@datawidth + 5) * @num);
+}
+
+.one {
+  .dataleft(1);
+  height: 49px;
+  background-color: #00dda6;
+}
+
+.two {
+  .dataleft(2);
+  height: 96px;
+  background-color: #0077ff;
+}
+
+.three {
+  .dataleft(3);
+  height: 32px;
+  background-color: #e62a53;
+}
+
+.four {
+  .dataleft(4);
+  height: 128px;
+  background-color: #f0cd08;
+}
+
+.five {
+  .dataleft(5);
+  height: 57px;
+  background-color: #289714;
+}
+
+.six {
+  .dataleft(6);
+  height: 64px;
+  background-color: #842ab8;
+}
+
+.seven {
+  .dataleft(7);
+  height: 22px;
+  background-color: #db5000;
+}
