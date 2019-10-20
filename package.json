@@ -1,10 +1,12 @@
 {
-  "name": "sortview",
+  "name": "InsertSortDemo",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+
+    "start": "echo \"请打开浏览器访问http://localhost:8080\" && http-server",
+    "compile": "cd css && lessc style.less style.css && cd ../js && tsc"
   },
   "author": "lnp",
   "license": "MIT",
