@@ -1,7 +1,14 @@
 @bordercolor: #232323;
 @bordersize: 1px;
 @datacolor: #0099ff;
-@datawidth: 80px;
+@datawidth: 8vw;
+@color1: #00dda6;
+@color2: #0077ff;
+@color3: #e62a53;
+@color4: #f0cd08;
+@color5: #289714;
+@color6: #842ab8;
+@color7: #db5000;
 
 .canvas {
   border: @bordercolor solid @bordersize;
@@ -19,37 +26,37 @@ h1 {
 }
 .vib {
   display: block;
-  width: 800px;
+  width: 80vw;
   margin: 0 auto;
 }
 .viewbox {
   text-align: center;
-  top: 100px;
+  top: 12vw;
   position: relative;
 }
 .point {
   //text-align: center;
-  top: 60px;
+  top: 5vw;
   position: relative;
 }
 .pp {
   position: relative;
-  left: 203px; //118 203 288 373 456 543 627
+  left: 21vw; //12 21 30 39 48 57 66
   color: #ff4747;
-  font-size: 30px;
-  top: -50px;
+  font-size: 3vw;
+  top: -6vw;
 }
 .pd {
   position: relative;
-  left: 98px; //118 203 288 373 456 543 627
+  left: 9.75vw; // 9.75 18.5 27.5 36.5 45.5 54.5 63.5
   color: #48ad59;
-  font-size: 30px;
+  font-size: 3vw;
 }
 .ps {
   position: relative;
-  left: 160px; //118 203 288 373 456 543 627
+  left: 16.5vw; //7.75 16.5 25.5 34.5 43.5 52.5 61.5
   color: #178bce;
-  font-size: 30px;
+  font-size: 3vw;
 }
 .btn {
   color: #fff;
@@ -77,58 +84,99 @@ h1 {
   position: absolute;
 }
 
+@media screen and (min-width: 1300px) {
+  .bottom {
+    position: relative;
+    top: 15vw;
+    text-align: center;
+    color: coral;
+    font-size: 14pt;
+  }
+}
+
+@media screen and (min-width: 1300px) and (max-width: 1300px) {
+  .bottom {
+    position: relative;
+    top: 18vw;
+    text-align: center;
+    color: coral;
+    font-size: 14pt;
+  }
+}
+
+@media screen and (min-width: 1000px) and (max-width: 1300px) {
+  .bottom {
+    position: relative;
+    top: 20vw;
+    text-align: center;
+    color: coral;
+    font-size: 14pt;
+  }
+}
+@media screen and (min-width: 880px) and (max-width: 1000px) {
+  .bottom {
+    position: relative;
+    top: 25vw;
+    text-align: center;
+    color: coral;
+    font-size: 14pt;
+  }
+}
+@media screen and (max-width: 880px) {
+  .bottom {
+    position: relative;
+    top: 35vw;
+    text-align: center;
+    color: coral;
+    font-size: 14pt;
+  }
+}
 .inpu {
   border: #0099ff solid 1px;
   border-radius: 5px;
-  font-size: 20px;
-  width: @datawidth * 0.95;
+  font-size: 4vw;
+  width: @datawidth;
   margin-right: -1px;
   color: #0099ff;
   text-align: center;
 }
 
-.dataleft(@num) {
-  left: ((@datawidth + 5) * @num);
+.dataleftc(@num, @color) {
+  left: ((@datawidth + 1) * @num);
+  background-color: @color;
 }
 
 .one {
-  .dataleft(1);
+  .dataleftc(1vw, @color1);
   height: 49px;
-  background-color: #00dda6;
 }
 
 .two {
-  .dataleft(2);
+  .dataleftc(2vw, @color2);
   height: 96px;
-  background-color: #0077ff;
 }
 
 .three {
-  .dataleft(3);
+  .dataleftc(3vw, @color3);
   height: 32px;
-  background-color: #e62a53;
 }
 
 .four {
-  .dataleft(4);
+  .dataleftc(4vw, @color4);
   height: 128px;
-  background-color: #f0cd08;
 }
 
 .five {
-  .dataleft(5);
+  .dataleftc(5vw, @color5);
   height: 57px;
-  background-color: #289714;
 }
 
 .six {
-  .dataleft(6);
+  .dataleftc(6vw, @color6);
   height: 64px;
-  background-color: #842ab8;
 }
 
 .seven {
-  .dataleft(7);
+  .dataleftc(7vw, @color7);
   height: 22px;
-  background-color: #db5000;
 }

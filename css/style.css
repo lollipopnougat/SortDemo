@@ -14,36 +14,36 @@ h1 {
 }
 .vib {
   display: block;
-  width: 800px;
+  width: 80vw;
   margin: 0 auto;
 }
 .viewbox {
   text-align: center;
-  top: 100px;
+  top: 12vw;
   position: relative;
 }
 .point {
-  top: 60px;
+  top: 5vw;
   position: relative;
 }
 .pp {
   position: relative;
-  left: 203px;
+  left: 21vw;
   color: #ff4747;
-  font-size: 30px;
-  top: -50px;
+  font-size: 3vw;
+  top: -6vw;
 }
 .pd {
   position: relative;
-  left: 98px;
+  left: 9.75vw;
   color: #48ad59;
-  font-size: 30px;
+  font-size: 3vw;
 }
 .ps {
   position: relative;
-  left: 160px;
+  left: 16.5vw;
   color: #178bce;
-  font-size: 30px;
+  font-size: 3vw;
 }
 .btn {
   color: #fff;
@@ -61,7 +61,7 @@ h1 {
 }
 .blockbox {
   display: inline-block;
-  width: 80px;
+  width: 8vw;
   height: 20px;
   vertical-align: bottom;
   background-color: #0099ff;
@@ -69,47 +69,92 @@ h1 {
   border-radius: 5px;
   position: absolute;
 }
+@media screen and (min-width: 1300px) {
+  .bottom {
+    position: relative;
+    top: 15vw;
+    text-align: center;
+    color: coral;
+    font-size: 14pt;
+  }
+}
+@media screen and (min-width: 1300px) and (max-width: 1300px) {
+  .bottom {
+    position: relative;
+    top: 18vw;
+    text-align: center;
+    color: coral;
+    font-size: 14pt;
+  }
+}
+@media screen and (min-width: 1000px) and (max-width: 1300px) {
+  .bottom {
+    position: relative;
+    top: 20vw;
+    text-align: center;
+    color: coral;
+    font-size: 14pt;
+  }
+}
+@media screen and (min-width: 880px) and (max-width: 1000px) {
+  .bottom {
+    position: relative;
+    top: 25vw;
+    text-align: center;
+    color: coral;
+    font-size: 14pt;
+  }
+}
+@media screen and (max-width: 880px) {
+  .bottom {
+    position: relative;
+    top: 35vw;
+    text-align: center;
+    color: coral;
+    font-size: 14pt;
+  }
+}
 .inpu {
   border: #0099ff solid 1px;
   border-radius: 5px;
-  font-size: 20px;
-  width: 76px;
+  font-size: 4vw;
+  width: 8vw;
   margin-right: -1px;
   color: #0099ff;
   text-align: center;
 }
 .one {
-  left: 85px;
-  height: 49px;
+  left: 9vw;
   background-color: #00dda6;
+  height: 49px;
 }
 .two {
-  left: 170px;
-  height: 96px;
+  left: 18vw;
   background-color: #0077ff;
+  height: 96px;
 }
 .three {
-  left: 255px;
-  height: 32px;
+  left: 27vw;
   background-color: #e62a53;
+  height: 32px;
 }
 .four {
-  left: 340px;
-  height: 128px;
+  left: 36vw;
   background-color: #f0cd08;
+  height: 128px;
 }
 .five {
-  left: 425px;
-  height: 57px;
+  left: 45vw;
   background-color: #289714;
+  height: 57px;
 }
 .six {
-  left: 510px;
-  height: 64px;
+  left: 54vw;
   background-color: #842ab8;
+  height: 64px;
 }
 .seven {
-  left: 595px;
-  height: 22px;
+  left: 63vw;
   background-color: #db5000;
+  height: 22px;
 }

@@ -1,7 +1,10 @@
 # InsertSortDemo
 
-直插法排序算法演示
+排序算法演示
 [GitHub托管的静态页面](https://lollipopnougat.github.io/InsertSortDemo/)
+
+
+
 
 ## 注意
 
@@ -38,4 +41,13 @@
     打开浏览器，定位到 http://localhost:8080 即可看到页面
 
 
+## 待实现算法:
+
+* <del>直接插入排序 (InsertSort)</del>
+* 希尔排序 (ShellSort)
+* 冒泡排序 (BubbleSort)
+* 快速排序 (QuickSort)
+* 简单选择排序 (SelectSort)
+* 堆排序 (HeapSort)
+* 归并排序 (MergeSort)
 
