@@ -2,7 +2,8 @@ var ViewControl = (function () {
     function ViewControl() {
         this.divIdName = ['one', 'two', 'three', 'four', 'five', 'six', 'seven'];
         this.divWidthCoord = ['9vw', '18vw', '27vw', '36vw', '45vw', '54vw', '63vw'];
-        this.pointerCoord = [12, 21, 30, 39, 48, 57, 66];
+        this.pointerCoord = [12, 17, 26, 35, 44, 53, 62];
+        this.pointerWidth = [12.25, 21.25, 30.25, 39.25, 48.25, 57.25, 66.25];
         this.numsList = new Array();
         this.divList = new Array();
     }
@@ -41,8 +42,8 @@ var ViewControl = (function () {
         }
         else {
             $('#point').animate({ left: this.pointerCoord[currentNum].toString() + 'vw' });
-            $('#pointl').animate({ left: (this.pointerCoord[lastNum] - 2.5).toString() + 'vw' });
-            $('#pointr').animate({ left: (this.pointerCoord[lastNum + 1] - 4.5).toString() + 'vw' });
+            $('#pointl').animate({ left: (this.pointerWidth[lastNum]).toString() + 'vw' });
+            $('#pointr').animate({ left: (this.pointerWidth[lastNum + 1] - 2).toString() + 'vw' });
         }
     };
     return ViewControl;

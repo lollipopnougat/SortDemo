@@ -13,7 +13,8 @@ class ViewControl {
     private divList: Array<JQuery<HTMLElement>>;
     private divIdName = ['one', 'two', 'three', 'four', 'five', 'six', 'seven'];
     private divWidthCoord = ['9vw', '18vw', '27vw', '36vw', '45vw', '54vw', '63vw'];
-    private pointerCoord = [12, 21, 30, 39, 48, 57, 66];
+    private pointerCoord = [8, 17, 26, 35, 44, 53, 62];
+    private pointerWidth = [12.25, 21.25, 30.25, 39.25, 48.25, 57.25, 66.25];
 
     public constructor() {
         this.numsList = new Array<number>();
@@ -66,8 +67,8 @@ class ViewControl {
         }
         else {
             $('#point').animate({ left: this.pointerCoord[currentNum].toString() + 'vw' });
-            $('#pointl').animate({ left: (this.pointerCoord[lastNum] - 2.5).toString() + 'vw' });
-            $('#pointr').animate({ left: (this.pointerCoord[lastNum + 1] - 4.5).toString() + 'vw' });
+            $('#pointl').animate({ left: (this.pointerWidth[lastNum]).toString() + 'vw' });
+            $('#pointr').animate({ left: (this.pointerWidth[lastNum + 1] - 2).toString() + 'vw' });
         }
 
     }

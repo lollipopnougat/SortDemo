@@ -28,20 +28,20 @@ h1 {
 }
 .pp {
   position: relative;
-  left: 21vw;
+  left: 17vw;
   color: #ff4747;
   font-size: 3vw;
-  top: -6vw;
+  top: -5vw;
 }
 .pd {
   position: relative;
-  left: 9.75vw;
+  left: 12.25vw;
   color: #48ad59;
   font-size: 3vw;
 }
 .ps {
   position: relative;
-  left: 16.5vw;
+  left: 19vw;
   color: #178bce;
   font-size: 3vw;
 }
