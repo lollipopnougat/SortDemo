@@ -4,13 +4,13 @@
   "description": "",
   "main": "index.html",
   "scripts": {
-
     "start": "echo \"请打开浏览器访问http://localhost:8080\" && http-server",
-    "compile": "cd css && lessc style.less style.css && cd ../js && tsc"
+    "compile": "cd css && lessc style.less style.css && cd .. && tsc"
   },
   "author": "lnp",
   "license": "MIT",
   "dependencies": {
     "@types/jquery": "^3.3.31"
-  }
+  },
+  "devDependencies": {}
 }

@@ -5,16 +5,15 @@ interface Sorter {
     getNumsList(): Array<number>;
 }
 
-
 // 视图控制类
 class ViewControl {
 
-    private numsList: Array<number>;
-    private divList: Array<JQuery<HTMLElement>>;
     private static divIdName = ['one', 'two', 'three', 'four', 'five', 'six', 'seven'];
     private static divWidthCoord = ['9vw', '18vw', '27vw', '36vw', '45vw', '54vw', '63vw'];
     private static pointerCoord = [8, 17, 26, 35, 44, 53, 62];
     private static pointerWidth = [12.25, 21.25, 30.25, 39.25, 48.25, 57.25, 66.25];
+    private numsList: Array<number>;
+    private divList: Array<JQuery<HTMLElement>>;
 
     public constructor() {
         this.numsList = new Array<number>();
@@ -65,8 +64,7 @@ class ViewControl {
             $('#pointl').css('color', '#fff');
             $('#pointr').css('color', '#fff');
             $('#point').css('color', '#48ad59');
-        }
-        else {
+        } else {
             $('#point').animate({ left: ViewControl.pointerCoord[currentNum].toString() + 'vw' });
             $('#pointl').animate({ left: ViewControl.pointerWidth[leftPoint].toString() + 'vw' });
             $('#pointr').animate({ left: (ViewControl.pointerWidth[rightPoint] - 2).toString() + 'vw' });
