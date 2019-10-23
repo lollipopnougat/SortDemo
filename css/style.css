@@ -9,8 +9,14 @@ h1 {
   text-align: center;
   color: #0099ff;
 }
-.inputarea {
+.txtalgc {
   text-align: center;
+  color: #0099ff;
+}
+.inputarea {
+  margin-top: 1vh;
+  text-align: center;
+  color: #0099ff;
 }
 .vib {
   display: block;
@@ -32,6 +38,10 @@ h1 {
   color: #ff4747;
   font-size: 3vw;
   top: -5vw;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  transition: all 0.5s ease-out 0s;
 }
 .pd {
   position: relative;

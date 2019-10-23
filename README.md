@@ -1,4 +1,4 @@
-# InsertSortDemo
+# SortDemo
 
 排序算法演示
 [GitHub托管的静态页面](https://lollipopnougat.github.io/InsertSortDemo/)
@@ -47,7 +47,7 @@
 * 希尔排序 (ShellSort)
 * 冒泡排序 (BubbleSort)
 * 快速排序 (QuickSort)
-* 简单选择排序 (SelectSort)
+* <del>简单选择排序 (SelectSort)</del>
 * 堆排序 (HeapSort)
 * 归并排序 (MergeSort)
 

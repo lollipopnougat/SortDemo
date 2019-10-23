@@ -11,10 +11,10 @@ class ViewControl {
 
     private numsList: Array<number>;
     private divList: Array<JQuery<HTMLElement>>;
-    private divIdName = ['one', 'two', 'three', 'four', 'five', 'six', 'seven'];
-    private divWidthCoord = ['9vw', '18vw', '27vw', '36vw', '45vw', '54vw', '63vw'];
-    private pointerCoord = [8, 17, 26, 35, 44, 53, 62];
-    private pointerWidth = [12.25, 21.25, 30.25, 39.25, 48.25, 57.25, 66.25];
+    private static divIdName = ['one', 'two', 'three', 'four', 'five', 'six', 'seven'];
+    private static divWidthCoord = ['9vw', '18vw', '27vw', '36vw', '45vw', '54vw', '63vw'];
+    private static pointerCoord = [8, 17, 26, 35, 44, 53, 62];
+    private static pointerWidth = [12.25, 21.25, 30.25, 39.25, 48.25, 57.25, 66.25];
 
     public constructor() {
         this.numsList = new Array<number>();
@@ -22,8 +22,8 @@ class ViewControl {
     }
 
     // 准备数据
-    public prepareData() {
-        this.divIdName.forEach(element => {
+    public prepareData(): void {
+        ViewControl.divIdName.forEach(element => {
             this.divList.push($('#' + element));
             $('#i-' + element.substr(0, 2)).attr('disabled', 'true');
         });
@@ -43,32 +43,32 @@ class ViewControl {
         });*/
 
     }
-    public getNumsList() {
+    public getNumsList(): Array<number> {
         return this.numsList;
     }
 
-    public swapDiv(lhs: number, rhs: number) {
+    public swapDiv(lhs: number, rhs: number): void {
         this.divList[lhs].animate({ top: '100px' }, { queue: true, duration: 600 })
-            .animate({ left: this.divWidthCoord[rhs] }, { queue: true, duration: 600 })
+            .animate({ left: ViewControl.divWidthCoord[rhs] }, { queue: true, duration: 600 })
             .animate({ top: '0px' }, { queue: true, duration: 600 });
         this.divList[rhs].animate({ top: '50px' }, { queue: true, duration: 600 })
-            .animate({ left: this.divWidthCoord[lhs] }, { queue: true, duration: 600 })
+            .animate({ left: ViewControl.divWidthCoord[lhs] }, { queue: true, duration: 600 })
             .animate({ top: '0px' }, { queue: true, duration: 600 });
         let tt = this.divList[lhs];
         this.divList[lhs] = this.divList[rhs];
         this.divList[rhs] = tt;
     }
 
-    public movePointer(currentNum: number, lastNum: number) {
-        if (currentNum >= this.numsList.length) {
-            $('#pointl').css('display', 'none');
-            $('#pointr').css('display', 'none');
+    public movePointer(currentNum: number, leftPoint: number, rightPoint: number, isFine: boolean): void {
+        if (isFine) {
+            $('#pointl').css('color', '#fff');
+            $('#pointr').css('color', '#fff');
             $('#point').css('color', '#48ad59');
         }
         else {
-            $('#point').animate({ left: this.pointerCoord[currentNum].toString() + 'vw' });
-            $('#pointl').animate({ left: (this.pointerWidth[lastNum]).toString() + 'vw' });
-            $('#pointr').animate({ left: (this.pointerWidth[lastNum + 1] - 2).toString() + 'vw' });
+            $('#point').animate({ left: ViewControl.pointerCoord[currentNum].toString() + 'vw' });
+            $('#pointl').animate({ left: ViewControl.pointerWidth[leftPoint].toString() + 'vw' });
+            $('#pointr').animate({ left: (ViewControl.pointerWidth[rightPoint] - 2).toString() + 'vw' });
         }
 
     }
@@ -111,7 +111,7 @@ class InertSort implements Sorter {
                 this.currentNum++;
                 this.lastNum = this.currentNum - 1;
             }
-            this.viewController.movePointer(this.currentNum, this.lastNum);
+            this.viewController.movePointer(this.currentNum, this.lastNum, this.lastNum + 1, (this.currentNum >= this.numsList.length));
         }
         else {
             this.isSorted = true;
@@ -143,6 +143,73 @@ class InertSort implements Sorter {
     }
 }
 
+// 简单选择
+class SelectSort implements Sorter {
+    private currentNum: number;
+    private currentMaxIndex: number;
+    private maxNums: number;
+    private numsList: Array<number>;
+    private isSorted: boolean = false;
+    private isFirstRun = true;
+    private viewController = new ViewControl();
+
+    public constructor() {
+        this.currentNum = 1;
+        this.maxNums = 0;
+        this.currentMaxIndex = 0;
+    }
+
+    public sort(): void {
+        if (this.isFirstRun) {
+            this.viewController.prepareData();
+            this.numsList = this.viewController.getNumsList();
+            this.isFirstRun = false;
+        }
+        if (this.currentNum < this.numsList.length - this.maxNums) {
+            if (this.numsList[this.currentNum] > this.numsList[this.currentMaxIndex]) {
+                this.currentMaxIndex = this.currentNum;
+            }
+            if (this.currentNum == this.numsList.length - this.maxNums - 1) {
+                this.swap(this.numsList.length - this.maxNums - 1, this.currentMaxIndex);
+                this.viewController.swapDiv(this.numsList.length - this.maxNums - 1, this.currentMaxIndex);
+                this.currentNum = 1;
+                this.currentMaxIndex = 0;
+                this.maxNums++;
+            }
+            else {
+                this.currentNum++;
+            }
+            this.viewController.movePointer(this.numsList.length - this.maxNums - 1, this.currentNum, this.currentMaxIndex, (this.maxNums == this.numsList.length - 1));
+        }
+        else {
+            this.isSorted = true;
+            alert('排序完成');
+        }
+    }
+
+    public getNumsList(): Array<number> {
+        return this.numsList;
+    }
+
+    public isFinished(): boolean {
+        return this.isSorted;
+    }
+
+    public getCurrentNum(): number {
+        return this.currentNum;
+    }
+
+    public getmaxNums(): number {
+        return this.maxNums;
+    }
+
+    private swap(lhs: number, rhs: number): void {
+        let tmp = this.numsList[lhs];
+        this.numsList[lhs] = this.numsList[rhs];
+        this.numsList[rhs] = tmp;
+    }
+}
+
 
 
 
@@ -154,7 +221,7 @@ function sleep(d: number) {
 let num = 1;
 let j = num - 1;
 */
-function inpuo(inputnum: string, target: string) {
+function inpuo(inputnum: string, target: string): void {
     let inp = $('#' + inputnum);
     if (inp.val() == '' || !inp.val()) $('#' + target).text('0');
     else {
@@ -164,7 +231,26 @@ function inpuo(inputnum: string, target: string) {
     }
 }
 
-let sorter = new InertSort();
+let sorter: Sorter = new InertSort();
+
+function radioChange(): void {
+    if ($('#inS').prop('checked')) {
+        sorter = new InertSort();
+        $('#desc1').text('蓝色箭头代表此轮要插入有序列表的数');
+        $('#pointr').css('left', '19vw');
+        $('#pointl').css('left', '12.25vw');
+        $('#point').css('left', '17vw');
+    }
+    else if ($('#seS').prop('checked')) {
+        sorter = new SelectSort();
+        $('#desc1').text('蓝色箭头代表当前找到的最大数');
+        $('#pointr').css('left', '10.25vw');
+        $('#pointl').css('left', '21.25vw');
+        $('#point').css('left', '62vw');
+    }
+}
+
+//let sorter = new SelectSort();
 
 function sort() {
     sorter.sort();
