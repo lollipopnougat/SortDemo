@@ -44,8 +44,8 @@
 ## 待实现算法:
 
 * <del>直接插入排序 (InsertSort)</del>
-* 希尔排序 (ShellSort)
-* 冒泡排序 (BubbleSort)
+* 希尔排序 (ShellSort) 有问题...
+* <del>冒泡排序 (BubbleSort)</del>
 * 快速排序 (QuickSort)
 * <del>简单选择排序 (SelectSort)</del>
 * 堆排序 (HeapSort)

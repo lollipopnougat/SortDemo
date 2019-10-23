@@ -26,6 +26,7 @@ class ViewControl {
         ViewControl.divIdName.forEach(element => {
             this.divList.push($('#' + element));
             $('#i-' + element.substr(0, 2)).attr('disabled', 'true');
+            $('#select-type').css('display','none');
         });
         this.divList.forEach(element => {
             if (isNaN(parseInt(element.text()))) {
@@ -143,6 +144,75 @@ class InertSort implements Sorter {
     }
 }
 
+
+//希尔排序 有问题...
+class ShellSort implements Sorter {
+    private currentNum: number;
+    private lastNum: number;
+    private gap: number;
+    private tmp: number;
+    private numsList: Array<number>;
+    private isSorted: boolean = false;
+    private isFirstRun = true;
+    private viewController = new ViewControl();
+
+    public constructor() {
+        this.currentNum = 1;
+        this.lastNum = 0;
+    }
+
+    public sort(): void {
+        if (this.isFirstRun) {
+            this.viewController.prepareData();
+            this.numsList = this.viewController.getNumsList();
+            this.gap = Math.floor(this.numsList.length / 2);
+            this.currentNum = this.gap;
+            this.isFirstRun = false;
+        }
+        if (this.gap > 0) {
+            if (this.currentNum < this.numsList.length) {
+                this.tmp = this.currentNum - this.gap;
+                if (this.tmp >= 0 && this.numsList[this.currentNum] < this.tmp) {
+                    this.swap(this.tmp, this.tmp + this.gap);
+                    this.tmp -= this.gap;
+                }
+                else {
+                    this.swap(this.tmp + this.gap, this.currentNum);
+                    this.currentNum++;
+                }
+                this.viewController.movePointer(this.currentNum, this.tmp, this.tmp + this.gap, (this.gap == 0));
+            }
+            this.gap = Math.floor(this.gap / 2);
+        }
+        else {
+            this.isSorted = true;
+            alert('排序完成');
+        }
+    }
+
+    public getNumsList(): Array<number> {
+        return this.numsList;
+    }
+
+    public isFinished(): boolean {
+        return this.isSorted;
+    }
+
+    public getCurrentNum(): number {
+        return this.currentNum;
+    }
+
+    public getLastNum(): number {
+        return this.lastNum;
+    }
+
+    private swap(lhs: number, rhs: number): void {
+        let tmp = this.numsList[lhs];
+        this.numsList[lhs] = this.numsList[rhs];
+        this.numsList[rhs] = tmp;
+    }
+}
+
 // 简单选择
 class SelectSort implements Sorter {
     private currentNum: number;
@@ -210,6 +280,69 @@ class SelectSort implements Sorter {
     }
 }
 
+// 起泡排序
+class BubbleSort implements Sorter {
+    private currentNum: number;
+    private recNums: number;
+    private numsList: Array<number>;
+    private isSorted: boolean = false;
+    private isFirstRun = true;
+    private viewController = new ViewControl();
+
+    public constructor() {
+        this.currentNum = 1;
+        this.recNums = 0;
+    }
+
+    public sort(): void {
+        if (this.isFirstRun) {
+            this.viewController.prepareData();
+            this.numsList = this.viewController.getNumsList();
+            this.isFirstRun = false;
+        }
+        if (this.currentNum < this.numsList.length - this.recNums) {
+            if (this.numsList[this.currentNum - 1] > this.numsList[this.currentNum]) {
+                this.swap(this.currentNum, this.currentNum - 1);
+                this.viewController.swapDiv(this.currentNum, this.currentNum - 1);
+            }
+            if(this.currentNum == this.numsList.length - this.recNums - 1) {
+                this.recNums++;
+                this.currentNum = 1;
+            }
+            else {
+                this.currentNum++;
+            }
+            this.viewController.movePointer(this.numsList.length - this.recNums - 1, this.currentNum, this.currentNum - 1, (this.recNums == this.numsList.length - 1));
+        }
+        else {
+            this.isSorted = true;
+            alert('排序完成');
+        }
+    }
+
+    public getNumsList(): Array<number> {
+        return this.numsList;
+    }
+
+    public isFinished(): boolean {
+        return this.isSorted;
+    }
+
+    public getCurrentNum(): number {
+        return this.currentNum;
+    }
+
+    public getrecNums(): number {
+        return this.recNums;
+    }
+
+    private swap(lhs: number, rhs: number): void {
+        let tmp = this.numsList[lhs];
+        this.numsList[lhs] = this.numsList[rhs];
+        this.numsList[rhs] = tmp;
+    }
+}
+
 
 
 
@@ -240,6 +373,7 @@ function radioChange(): void {
         $('#pointr').css('left', '19vw');
         $('#pointl').css('left', '12.25vw');
         $('#point').css('left', '17vw');
+        console.log('执行了ins');
     }
     else if ($('#seS').prop('checked')) {
         sorter = new SelectSort();
@@ -247,7 +381,17 @@ function radioChange(): void {
         $('#pointr').css('left', '10.25vw');
         $('#pointl').css('left', '21.25vw');
         $('#point').css('left', '62vw');
+        console.log('执行了ses');
     }
+    else if ($('#buS').prop('checked')) {
+        sorter = new BubbleSort();
+        $('#desc1').text('箭头指向当前比较数');
+        $('#pointr').css('left', '10.25vw');
+        $('#pointl').css('left', '21.25vw');
+        $('#point').css('left', '62vw');
+        console.log('执行了bus');
+    }
+
 }
 
 //let sorter = new SelectSort();

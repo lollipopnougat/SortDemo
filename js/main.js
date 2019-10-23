@@ -8,6 +8,7 @@ var ViewControl = (function () {
         ViewControl.divIdName.forEach(function (element) {
             _this.divList.push($('#' + element));
             $('#i-' + element.substr(0, 2)).attr('disabled', 'true');
+            $('#select-type').css('display', 'none');
         });
         this.divList.forEach(function (element) {
             if (isNaN(parseInt(element.text()))) {
@@ -104,6 +105,61 @@ var InertSort = (function () {
     };
     return InertSort;
 }());
+var ShellSort = (function () {
+    function ShellSort() {
+        this.isSorted = false;
+        this.isFirstRun = true;
+        this.viewController = new ViewControl();
+        this.currentNum = 1;
+        this.lastNum = 0;
+    }
+    ShellSort.prototype.sort = function () {
+        if (this.isFirstRun) {
+            this.viewController.prepareData();
+            this.numsList = this.viewController.getNumsList();
+            this.gap = Math.floor(this.numsList.length / 2);
+            this.currentNum = this.gap;
+            this.isFirstRun = false;
+        }
+        if (this.gap > 0) {
+            if (this.currentNum < this.numsList.length) {
+                this.tmp = this.currentNum - this.gap;
+                if (this.tmp >= 0 && this.numsList[this.currentNum] < this.tmp) {
+                    this.swap(this.tmp, this.tmp + this.gap);
+                    this.tmp -= this.gap;
+                }
+                else {
+                    this.swap(this.tmp + this.gap, this.currentNum);
+                    this.currentNum++;
+                }
+                this.viewController.movePointer(this.currentNum, this.tmp, this.tmp + this.gap, (this.gap == 0));
+            }
+            this.gap = Math.floor(this.gap / 2);
+        }
+        else {
+            this.isSorted = true;
+            alert('排序完成');
+        }
+    };
+    ShellSort.prototype.getNumsList = function () {
+        return this.numsList;
+    };
+    ShellSort.prototype.isFinished = function () {
+        return this.isSorted;
+    };
+    ShellSort.prototype.getCurrentNum = function () {
+        return this.currentNum;
+    };
+    ShellSort.prototype.getLastNum = function () {
+        return this.lastNum;
+    };
+    ShellSort.prototype.swap = function (lhs, rhs) {
+        var tmp = this.numsList[lhs];
+        this.numsList[lhs] = this.numsList[rhs];
+        this.numsList[rhs] = tmp;
+    };
+    return ShellSort;
+}());
 var SelectSort = (function () {
     function SelectSort() {
         this.isSorted = false;
@@ -159,6 +215,58 @@ var SelectSort = (function () {
     };
     return SelectSort;
 }());
+var BubbleSort = (function () {
+    function BubbleSort() {
+        this.isSorted = false;
+        this.isFirstRun = true;
+        this.viewController = new ViewControl();
+        this.currentNum = 1;
+        this.recNums = 0;
+    }
+    BubbleSort.prototype.sort = function () {
+        if (this.isFirstRun) {
+            this.viewController.prepareData();
+            this.numsList = this.viewController.getNumsList();
+            this.isFirstRun = false;
+        }
+        if (this.currentNum < this.numsList.length - this.recNums) {
+            if (this.numsList[this.currentNum - 1] > this.numsList[this.currentNum]) {
+                this.swap(this.currentNum, this.currentNum - 1);
+                this.viewController.swapDiv(this.currentNum, this.currentNum - 1);
+            }
+            if (this.currentNum == this.numsList.length - this.recNums - 1) {
+                this.recNums++;
+                this.currentNum = 1;
+            }
+            else {
+                this.currentNum++;
+            }
+            this.viewController.movePointer(this.numsList.length - this.recNums - 1, this.currentNum, this.currentNum - 1, (this.recNums == this.numsList.length - 1));
+        }
+        else {
+            this.isSorted = true;
+            alert('排序完成');
+        }
+    };
+    BubbleSort.prototype.getNumsList = function () {
+        return this.numsList;
+    };
+    BubbleSort.prototype.isFinished = function () {
+        return this.isSorted;
+    };
+    BubbleSort.prototype.getCurrentNum = function () {
+        return this.currentNum;
+    };
+    BubbleSort.prototype.getrecNums = function () {
+        return this.recNums;
+    };
+    BubbleSort.prototype.swap = function (lhs, rhs) {
+        var tmp = this.numsList[lhs];
+        this.numsList[lhs] = this.numsList[rhs];
+        this.numsList[rhs] = tmp;
+    };
+    return BubbleSort;
+}());
 function inpuo(inputnum, target) {
     var inp = $('#' + inputnum);
     if (inp.val() == '' || !inp.val())
@@ -177,6 +285,7 @@ function radioChange() {
         $('#pointr').css('left', '19vw');
         $('#pointl').css('left', '12.25vw');
         $('#point').css('left', '17vw');
+        console.log('执行了ins');
     }
     else if ($('#seS').prop('checked')) {
         sorter = new SelectSort();
@@ -184,6 +293,15 @@ function radioChange() {
         $('#pointr').css('left', '10.25vw');
         $('#pointl').css('left', '21.25vw');
         $('#point').css('left', '62vw');
+        console.log('执行了ses');
+    }
+    else if ($('#buS').prop('checked')) {
+        sorter = new BubbleSort();
+        $('#desc1').text('箭头指向当前比较数');
+        $('#pointr').css('left', '10.25vw');
+        $('#pointl').css('left', '21.25vw');
+        $('#point').css('left', '62vw');
+        console.log('执行了bus');
     }
 }
 function sort() {
