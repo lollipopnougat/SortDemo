@@ -14,6 +14,7 @@ enum SortType {
     HeapSort,
     MergeSort
 }
+
 // 视图控制类
 class ViewControl {
 
@@ -202,11 +203,11 @@ class ShellSort implements Sorter {
             this.numsList = this.viewController.getNumsList();
             this.gap = Math.floor(this.numsList.length / 2);
             this.currentNum = this.gap;
+            this.tmp = this.currentNum - this.gap;
             this.isFirstRun = false;
         }
         if (this.gap > 0) {
             if (this.currentNum < this.numsList.length) {
-                this.tmp = this.currentNum - this.gap;
                 if (this.tmp >= 0 && this.numsList[this.currentNum] < this.tmp) {
                     this.swap(this.tmp, this.tmp + this.gap);
                     this.tmp -= this.gap;
@@ -377,6 +378,7 @@ class BubbleSort implements Sorter {
         this.numsList[rhs] = tmp;
     }
 }
+
 
 
 

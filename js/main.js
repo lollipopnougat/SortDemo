@@ -138,11 +138,11 @@ var ShellSort = (function () {
             this.numsList = this.viewController.getNumsList();
             this.gap = Math.floor(this.numsList.length / 2);
             this.currentNum = this.gap;
+            this.tmp = this.currentNum - this.gap;
             this.isFirstRun = false;
         }
         if (this.gap > 0) {
             if (this.currentNum < this.numsList.length) {
-                this.tmp = this.currentNum - this.gap;
                 if (this.tmp >= 0 && this.numsList[this.currentNum] < this.tmp) {
                     this.swap(this.tmp, this.tmp + this.gap);
                     this.tmp -= this.gap;
@@ -304,7 +304,6 @@ function radioChange() {
         $('#pointr').css('left', '19vw');
         $('#pointl').css('left', '12.25vw');
         $('#point').css('left', '17vw');
-        console.log('执行了ins');
     }
     else if ($('#seS').prop('checked')) {
         sorter = new SelectSort();
@@ -312,7 +311,6 @@ function radioChange() {
         $('#pointr').css('left', '10.25vw');
         $('#pointl').css('left', '21.25vw');
         $('#point').css('left', '62vw');
-        console.log('执行了ses');
     }
     else if ($('#buS').prop('checked')) {
         sorter = new BubbleSort();
@@ -320,7 +318,6 @@ function radioChange() {
         $('#pointr').css('left', '10.25vw');
         $('#pointl').css('left', '21.25vw');
         $('#point').css('left', '62vw');
-        console.log('执行了bus');
     }
 }
 function sort() {

@@ -1,10 +1,12 @@
 # SortDemo
 
-排序算法演示
-[GitHub托管的静态页面](https://lollipopnougat.github.io/InsertSortDemo/)
+排序算法演示 `TypeScript` 实现<br>
+[GitHub托管的静态页面](https://lollipopnougat.github.io/SortDemo/)
 
 
+### 设计模式
 
+采用了策略模式，将排序算法封装，对外采用统一的接口
 
 ## 注意
 
