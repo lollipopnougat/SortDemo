@@ -1,15 +1,29 @@
+var SortType;
+(function (SortType) {
+    SortType[SortType["InsertSort"] = 0] = "InsertSort";
+    SortType[SortType["ShellSort"] = 1] = "ShellSort";
+    SortType[SortType["SelectSort"] = 2] = "SelectSort";
+    SortType[SortType["BubbleSort"] = 3] = "BubbleSort";
+    SortType[SortType["QuickSort"] = 4] = "QuickSort";
+    SortType[SortType["HeapSort"] = 5] = "HeapSort";
+    SortType[SortType["MergeSort"] = 6] = "MergeSort";
+})(SortType || (SortType = {}));
 var ViewControl = (function () {
-    function ViewControl() {
+    function ViewControl(sortType) {
         this.numsList = new Array();
         this.divList = new Array();
+        this.sortType = sortType;
+        this.titleList = new Array();
     }
     ViewControl.prototype.prepareData = function () {
         var _this = this;
         ViewControl.divIdName.forEach(function (element) {
             _this.divList.push($('#' + element));
             $('#i-' + element.substr(0, 2)).attr('disabled', 'true');
-            $('#select-type').css('display', 'none');
         });
+        $('#inS').css('display', 'none');
+        $('#seS').css('display', 'none');
+        $('#buS').css('display', 'none');
         this.divList.forEach(function (element) {
             if (isNaN(parseInt(element.text()))) {
                 throw new TypeError('非法类型!');
@@ -53,7 +67,7 @@ var InertSort = (function () {
     function InertSort() {
         this.isSorted = false;
         this.isFirstRun = true;
-        this.viewController = new ViewControl();
+        this.viewController = new ViewControl(SortType.InsertSort);
         this.currentNum = 1;
         this.lastNum = 0;
     }
@@ -79,7 +93,12 @@ var InertSort = (function () {
                 this.currentNum++;
                 this.lastNum = this.currentNum - 1;
             }
-            this.viewController.movePointer(this.currentNum, this.lastNum, this.lastNum + 1, (this.currentNum >= this.numsList.length));
+            if (this.lastNum < 0) {
+                this.viewController.movePointer(this.currentNum, this.lastNum + 1, this.lastNum + 1, (this.currentNum >= this.numsList.length));
+            }
+            else {
+                this.viewController.movePointer(this.currentNum, this.lastNum, this.lastNum + 1, (this.currentNum >= this.numsList.length));
+            }
         }
         else {
             this.isSorted = true;
@@ -109,7 +128,7 @@ var ShellSort = (function () {
     function ShellSort() {
         this.isSorted = false;
         this.isFirstRun = true;
-        this.viewController = new ViewControl();
+        this.viewController = new ViewControl(SortType.ShellSort);
         this.currentNum = 1;
         this.lastNum = 0;
     }
@@ -164,7 +183,7 @@ var SelectSort = (function () {
     function SelectSort() {
         this.isSorted = false;
         this.isFirstRun = true;
-        this.viewController = new ViewControl();
+        this.viewController = new ViewControl(SortType.SelectSort);
         this.currentNum = 1;
         this.maxNums = 0;
         this.currentMaxIndex = 0;
@@ -219,7 +238,7 @@ var BubbleSort = (function () {
     function BubbleSort() {
         this.isSorted = false;
         this.isFirstRun = true;
-        this.viewController = new ViewControl();
+        this.viewController = new ViewControl(SortType.BubbleSort);
         this.currentNum = 1;
         this.recNums = 0;
     }

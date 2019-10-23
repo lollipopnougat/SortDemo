@@ -5,6 +5,15 @@ interface Sorter {
     getNumsList(): Array<number>;
 }
 
+enum SortType {
+    InsertSort,
+    ShellSort,
+    SelectSort,
+    BubbleSort,
+    QuickSort,
+    HeapSort,
+    MergeSort
+}
 // 视图控制类
 class ViewControl {
 
@@ -14,19 +23,42 @@ class ViewControl {
     private static pointerWidth = [12.25, 21.25, 30.25, 39.25, 48.25, 57.25, 66.25];
     private numsList: Array<number>;
     private divList: Array<JQuery<HTMLElement>>;
+    private titleList: Array<JQuery<HTMLElement>>;
+    private sortType: SortType;
 
-    public constructor() {
+    public constructor(sortType: SortType) {
         this.numsList = new Array<number>();
         this.divList = new Array<JQuery<HTMLElement>>();
+        this.sortType = sortType;
+        this.titleList = new Array<JQuery<HTMLElement>>();
+        // let titleId = ['inS', 'shS', 'seS', 'buS', 'quS', 'heS', 'meS'];
+        // titleId.forEach(element => {
+        //     this.titleList.push($('#' + element));
+        // });
     }
+
+    // private setSortType(): void {
+    //     for (let i = 0; i < this.titleList.length; i++) {
+    //         if (i == <number>this.sortType) {
+    //             continue;
+    //         }
+    //         else {
+    //             this.titleList[i].css('display', 'none');
+    //         }
+    //     }
+    // }
 
     // 准备数据
     public prepareData(): void {
         ViewControl.divIdName.forEach(element => {
             this.divList.push($('#' + element));
             $('#i-' + element.substr(0, 2)).attr('disabled', 'true');
-            $('#select-type').css('display','none');
         });
+        //this.setSortType();
+        
+        $('#inS').css('display','none');
+        $('#seS').css('display','none');
+        $('#buS').css('display','none');
         this.divList.forEach(element => {
             if (isNaN(parseInt(element.text()))) {
                 throw new TypeError('非法类型!');
@@ -81,7 +113,7 @@ class InertSort implements Sorter {
     private numsList: Array<number>;
     private isSorted: boolean = false;
     private isFirstRun = true;
-    private viewController = new ViewControl();
+    private viewController = new ViewControl(SortType.InsertSort);
 
     public constructor() {
         this.currentNum = 1;
@@ -110,7 +142,12 @@ class InertSort implements Sorter {
                 this.currentNum++;
                 this.lastNum = this.currentNum - 1;
             }
-            this.viewController.movePointer(this.currentNum, this.lastNum, this.lastNum + 1, (this.currentNum >= this.numsList.length));
+            if(this.lastNum < 0) {
+                this.viewController.movePointer(this.currentNum, this.lastNum + 1, this.lastNum + 1, (this.currentNum >= this.numsList.length));
+            }
+            else {
+                this.viewController.movePointer(this.currentNum, this.lastNum, this.lastNum + 1, (this.currentNum >= this.numsList.length));
+            }
         }
         else {
             this.isSorted = true;
@@ -152,7 +189,7 @@ class ShellSort implements Sorter {
     private numsList: Array<number>;
     private isSorted: boolean = false;
     private isFirstRun = true;
-    private viewController = new ViewControl();
+    private viewController = new ViewControl(SortType.ShellSort);
 
     public constructor() {
         this.currentNum = 1;
@@ -219,7 +256,7 @@ class SelectSort implements Sorter {
     private numsList: Array<number>;
     private isSorted: boolean = false;
     private isFirstRun = true;
-    private viewController = new ViewControl();
+    private viewController = new ViewControl(SortType.SelectSort);
 
     public constructor() {
         this.currentNum = 1;
@@ -285,7 +322,7 @@ class BubbleSort implements Sorter {
     private numsList: Array<number>;
     private isSorted: boolean = false;
     private isFirstRun = true;
-    private viewController = new ViewControl();
+    private viewController = new ViewControl(SortType.BubbleSort);
 
     public constructor() {
         this.currentNum = 1;
@@ -303,7 +340,7 @@ class BubbleSort implements Sorter {
                 this.swap(this.currentNum, this.currentNum - 1);
                 this.viewController.swapDiv(this.currentNum, this.currentNum - 1);
             }
-            if(this.currentNum == this.numsList.length - this.recNums - 1) {
+            if (this.currentNum == this.numsList.length - this.recNums - 1) {
                 this.recNums++;
                 this.currentNum = 1;
             }
@@ -371,7 +408,6 @@ function radioChange(): void {
         $('#pointr').css('left', '19vw');
         $('#pointl').css('left', '12.25vw');
         $('#point').css('left', '17vw');
-        console.log('执行了ins');
     }
     else if ($('#seS').prop('checked')) {
         sorter = new SelectSort();
@@ -379,7 +415,6 @@ function radioChange(): void {
         $('#pointr').css('left', '10.25vw');
         $('#pointl').css('left', '21.25vw');
         $('#point').css('left', '62vw');
-        console.log('执行了ses');
     }
     else if ($('#buS').prop('checked')) {
         sorter = new BubbleSort();
@@ -387,7 +422,6 @@ function radioChange(): void {
         $('#pointr').css('left', '10.25vw');
         $('#pointl').css('left', '21.25vw');
         $('#point').css('left', '62vw');
-        console.log('执行了bus');
     }
 
 }
