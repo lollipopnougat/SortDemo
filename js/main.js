@@ -24,6 +24,7 @@ var ViewControl = (function () {
         $('#inS').css('display', 'none');
         $('#seS').css('display', 'none');
         $('#buS').css('display', 'none');
+        $('#shS').css('display', 'none');
         this.divList.forEach(function (element) {
             if (isNaN(parseInt(element.text()))) {
                 throw new TypeError('非法类型!');
@@ -60,7 +61,7 @@ var ViewControl = (function () {
     ViewControl.divIdName = ['one', 'two', 'three', 'four', 'five', 'six', 'seven'];
     ViewControl.divWidthCoord = ['9vw', '18vw', '27vw', '36vw', '45vw', '54vw', '63vw'];
     ViewControl.pointerCoord = [8, 17, 26, 35, 44, 53, 62];
-    ViewControl.pointerWidth = [12.25, 21.25, 30.25, 39.25, 48.25, 57.25, 66.25];
+    ViewControl.pointerWidth = [12.25, 21.25, 30.25, 39.25, 48.25, 57.25, 66.25, 75.25];
     return ViewControl;
 }());
 var InertSort = (function () {
@@ -128,6 +129,7 @@ var ShellSort = (function () {
     function ShellSort() {
         this.isSorted = false;
         this.isFirstRun = true;
+        this.controlFlag1 = true;
         this.viewController = new ViewControl(SortType.ShellSort);
         this.currentNum = 1;
         this.lastNum = 0;
@@ -138,22 +140,36 @@ var ShellSort = (function () {
             this.numsList = this.viewController.getNumsList();
             this.gap = Math.floor(this.numsList.length / 2);
             this.currentNum = this.gap;
-            this.tmp = this.currentNum - this.gap;
             this.isFirstRun = false;
         }
-        if (this.gap > 0) {
+        if (this.gap >= 1) {
             if (this.currentNum < this.numsList.length) {
-                if (this.tmp >= 0 && this.numsList[this.currentNum] < this.tmp) {
-                    this.swap(this.tmp, this.tmp + this.gap);
-                    this.tmp -= this.gap;
+                if (this.controlFlag1) {
+                    this.tmp = this.numsList[this.currentNum];
+                    this.lastNum = this.currentNum - this.gap;
+                    this.viewController.movePointer(this.gap, this.currentNum, this.lastNum, (this.gap < 1));
+                    this.controlFlag1 = false;
                 }
                 else {
-                    this.swap(this.tmp + this.gap, this.currentNum);
-                    this.currentNum++;
+                    this.viewController.movePointer(this.gap, this.currentNum, this.lastNum, (this.gap < 1));
                 }
-                this.viewController.movePointer(this.currentNum, this.tmp, this.tmp + this.gap, (this.gap == 0));
+                if (this.lastNum >= 0 && this.numsList[this.lastNum] > this.tmp) {
+                    this.swap(this.lastNum + this.gap, this.lastNum);
+                    this.viewController.swapDiv(this.lastNum + this.gap, this.lastNum);
+                    this.lastNum = this.lastNum - this.gap;
+                }
+                else {
+                    this.currentNum++;
+                    this.lastNum = this.currentNum - this.gap;
+                    this.viewController.movePointer(this.gap, this.currentNum, this.lastNum, (this.gap < 1));
+                    this.controlFlag1 = true;
+                }
             }
-            this.gap = Math.floor(this.gap / 2);
+            else {
+                this.gap = Math.floor(this.gap / 2);
+                this.currentNum = this.gap;
+                this.viewController.movePointer(this.gap, this.currentNum, this.lastNum, (this.gap < 1));
+            }
         }
         else {
             this.isSorted = true;
@@ -318,6 +334,13 @@ function radioChange() {
         $('#pointr').css('left', '10.25vw');
         $('#pointl').css('left', '21.25vw');
         $('#point').css('left', '62vw');
+    }
+    else if ($('#shS').prop('checked')) {
+        sorter = new ShellSort();
+        $('#desc1').text('红色方块位置索引值表示gap的大小');
+        $('#pointr').css('left', '10.25vw');
+        $('#pointl').css('left', '21.25vw');
+        $('#point').css('left', '35vw');
     }
 }
 function sort() {

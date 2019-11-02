@@ -21,7 +21,7 @@ class ViewControl {
     private static divIdName = ['one', 'two', 'three', 'four', 'five', 'six', 'seven'];
     private static divWidthCoord = ['9vw', '18vw', '27vw', '36vw', '45vw', '54vw', '63vw'];
     private static pointerCoord = [8, 17, 26, 35, 44, 53, 62];
-    private static pointerWidth = [12.25, 21.25, 30.25, 39.25, 48.25, 57.25, 66.25];
+    private static pointerWidth = [12.25, 21.25, 30.25, 39.25, 48.25, 57.25, 66.25, 75.25];
     private numsList: Array<number>;
     private divList: Array<JQuery<HTMLElement>>;
     private titleList: Array<JQuery<HTMLElement>>;
@@ -56,10 +56,11 @@ class ViewControl {
             $('#i-' + element.substr(0, 2)).attr('disabled', 'true');
         });
         //this.setSortType();
-        
-        $('#inS').css('display','none');
-        $('#seS').css('display','none');
-        $('#buS').css('display','none');
+
+        $('#inS').css('display', 'none');
+        $('#seS').css('display', 'none');
+        $('#buS').css('display', 'none');
+        $('#shS').css('display', 'none');
         this.divList.forEach(element => {
             if (isNaN(parseInt(element.text()))) {
                 throw new TypeError('非法类型!');
@@ -143,7 +144,7 @@ class InertSort implements Sorter {
                 this.currentNum++;
                 this.lastNum = this.currentNum - 1;
             }
-            if(this.lastNum < 0) {
+            if (this.lastNum < 0) {
                 this.viewController.movePointer(this.currentNum, this.lastNum + 1, this.lastNum + 1, (this.currentNum >= this.numsList.length));
             }
             else {
@@ -181,7 +182,7 @@ class InertSort implements Sorter {
 }
 
 
-//希尔排序 有问题...
+//希尔排序 
 class ShellSort implements Sorter {
     private currentNum: number;
     private lastNum: number;
@@ -190,41 +191,63 @@ class ShellSort implements Sorter {
     private numsList: Array<number>;
     private isSorted: boolean = false;
     private isFirstRun = true;
+    private controlFlag1 = true;
     private viewController = new ViewControl(SortType.ShellSort);
 
     public constructor() {
         this.currentNum = 1;
         this.lastNum = 0;
     }
-
     public sort(): void {
         if (this.isFirstRun) {
             this.viewController.prepareData();
             this.numsList = this.viewController.getNumsList();
             this.gap = Math.floor(this.numsList.length / 2);
             this.currentNum = this.gap;
-            this.tmp = this.currentNum - this.gap;
             this.isFirstRun = false;
         }
-        if (this.gap > 0) {
+        if (this.gap >= 1) {
             if (this.currentNum < this.numsList.length) {
-                if (this.tmp >= 0 && this.numsList[this.currentNum] < this.tmp) {
-                    this.swap(this.tmp, this.tmp + this.gap);
-                    this.tmp -= this.gap;
+                //for (let i = gap; i < this.numsList.length; i++) {
+                if (this.controlFlag1) {
+                    this.tmp = this.numsList[this.currentNum];
+                    this.lastNum = this.currentNum - this.gap;
+                    this.viewController.movePointer(this.gap, this.currentNum, this.lastNum, (this.gap < 1));
+                    this.controlFlag1 = false;
                 }
                 else {
-                    this.swap(this.tmp + this.gap, this.currentNum);
-                    this.currentNum++;
+                    this.viewController.movePointer(this.gap, this.currentNum, this.lastNum, (this.gap < 1));
                 }
-                this.viewController.movePointer(this.currentNum, this.tmp, this.tmp + this.gap, (this.gap == 0));
+                //直接插入排序，会向前找所适合的位置
+                if (this.lastNum >= 0 && this.numsList[this.lastNum] > this.tmp) {
+                    //交换位置
+                    //this.viewController.movePointer(this.gap, this.currentNum, this.lastNum, (this.gap < 1));
+                    this.swap(this.lastNum + this.gap, this.lastNum);
+                    //this.numsList[this.lastNum + gap] = this.numsList[this.lastNum];
+                    this.viewController.swapDiv(this.lastNum + this.gap, this.lastNum);
+                    //this.viewController.movePointer(this.gap, this.currentNum, this.lastNum, (this.gap < 1));
+                    this.lastNum = this.lastNum - this.gap;
+                }
+                else {
+                    this.currentNum++;
+                    this.lastNum = this.currentNum - this.gap;
+                    this.viewController.movePointer(this.gap, this.currentNum, this.lastNum, (this.gap < 1));
+                    this.controlFlag1 = true;
+                }
+                //this.numsList[this.lastNum + gap] = tmp;
             }
-            this.gap = Math.floor(this.gap / 2);
+            else {
+                this.gap = Math.floor(this.gap / 2);
+                this.currentNum = this.gap;
+                this.viewController.movePointer(this.gap, this.currentNum, this.lastNum, (this.gap < 1));
+            }
         }
         else {
             this.isSorted = true;
             alert('排序完成');
         }
     }
+
 
     public getNumsList(): Array<number> {
         return this.numsList;
@@ -424,6 +447,13 @@ function radioChange(): void {
         $('#pointr').css('left', '10.25vw');
         $('#pointl').css('left', '21.25vw');
         $('#point').css('left', '62vw');
+    }
+    else if ($('#shS').prop('checked')) {
+        sorter = new ShellSort();
+        $('#desc1').text('红色方块位置索引值表示gap的大小');
+        $('#pointr').css('left', '10.25vw');
+        $('#pointl').css('left', '21.25vw');
+        $('#point').css('left', '35vw');
     }
 
 }

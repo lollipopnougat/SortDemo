@@ -22,7 +22,7 @@
   npm i -g less
   ```
 * 使用了 `jquery`
-
+* 直插排序和希尔排序的动画有待改进
 
 ## 修改了项目如何编译
 
@@ -36,7 +36,7 @@
     npm run compile
     ```
 
-3. 然后执行 (也可以不执行，直接开html也可以)
+3. 然后执行 (也可以不执行这句，直接开html也可以观看)
     ```
     npm start
     ```
@@ -46,7 +46,7 @@
 ## 待实现算法:
 
 * <del>直接插入排序 (InsertSort)</del>
-* 希尔排序 (ShellSort) 有问题...
+* <del>希尔排序 (ShellSort)</del>
 * <del>冒泡排序 (BubbleSort)</del>
 * 快速排序 (QuickSort)
 * <del>简单选择排序 (SelectSort)</del>
