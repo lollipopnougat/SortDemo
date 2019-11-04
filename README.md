@@ -22,7 +22,9 @@
   npm i -g less
   ```
 * 使用了 `jquery`
-* 直插排序和希尔排序的动画有待改进
+* 直插排序和希尔排序以及快速排序的动画有待改进
+* 快排实现有点奇怪，现在都有点懵了(搞了个模拟栈，为了实现单步执行快晕了)
+* <del>明明ES6就有yield关键字还写那么麻烦的什么单步分解(编译到的目标平台是ES5，最重要的是还不会用...)<del>
 
 ## 修改了项目如何编译
 
@@ -48,7 +50,7 @@
 * <del>直接插入排序 (InsertSort)</del>
 * <del>希尔排序 (ShellSort)</del>
 * <del>冒泡排序 (BubbleSort)</del>
-* 快速排序 (QuickSort)
+* <del>快速排序 (QuickSort)</del>
 * <del>简单选择排序 (SelectSort)</del>
 * 堆排序 (HeapSort)
 * 归并排序 (MergeSort)

@@ -26,8 +26,9 @@ class ViewControl {
     private divList: Array<JQuery<HTMLElement>>;
     private titleList: Array<JQuery<HTMLElement>>;
     private sortType: SortType;
+    private static viewControl: ViewControl;
 
-    public constructor(sortType: SortType) {
+    private constructor(sortType: SortType) {
         this.numsList = new Array<number>();
         this.divList = new Array<JQuery<HTMLElement>>();
         this.sortType = sortType;
@@ -37,7 +38,18 @@ class ViewControl {
         //     this.titleList.push($('#' + element));
         // });
     }
-
+    public static getController(sortType: SortType): ViewControl {
+        if (this.viewControl == null) {
+            this.viewControl = new ViewControl(sortType);
+        }
+        else {
+            this.viewControl.numsList = new Array<number>();
+            this.viewControl.divList = new Array<JQuery<HTMLElement>>();
+            this.viewControl.sortType = sortType;
+            this.viewControl.titleList = new Array<JQuery<HTMLElement>>();
+        }
+        return this.viewControl;
+    }
     // private setSortType(): void {
     //     for (let i = 0; i < this.titleList.length; i++) {
     //         if (i == <number>this.sortType) {
@@ -51,6 +63,7 @@ class ViewControl {
 
     // 准备数据
     public prepareData(): void {
+
         ViewControl.divIdName.forEach(element => {
             this.divList.push($('#' + element));
             $('#i-' + element.substr(0, 2)).attr('disabled', 'true');
@@ -61,6 +74,7 @@ class ViewControl {
         $('#seS').css('display', 'none');
         $('#buS').css('display', 'none');
         $('#shS').css('display', 'none');
+        $('#quS').css('display', 'none');
         this.divList.forEach(element => {
             if (isNaN(parseInt(element.text()))) {
                 throw new TypeError('非法类型!');
@@ -93,6 +107,21 @@ class ViewControl {
         this.divList[rhs] = tt;
     }
 
+    public moveDiv(lhs: number, rhs: number): void {
+        this.divList[lhs].animate({ top: '100px' }, { queue: true, duration: 600 })
+            .animate({ left: ViewControl.divWidthCoord[rhs] }, { queue: true, duration: 600 })
+            .animate({ top: '0px' }, { queue: true, duration: 600 });
+        this.divList[rhs].animate({ top: '50px' }, { queue: true, duration: 600 });
+        let tt = this.divList[lhs];
+        this.divList[lhs] = this.divList[rhs];
+        this.divList[rhs] = tt;
+    }
+
+    public downDiv(div: number, target: number): void {
+        this.divList[div].animate({ left: ViewControl.divWidthCoord[target] }, { queue: true, duration: 600 })
+            .animate({ top: '0px' }, { queue: true, duration: 600 });
+    }
+
     public movePointer(currentNum: number, leftPoint: number, rightPoint: number, isFine: boolean): void {
         if (isFine) {
             $('#pointl').css('color', '#fff');
@@ -115,7 +144,7 @@ class InertSort implements Sorter {
     private numsList: Array<number>;
     private isSorted: boolean = false;
     private isFirstRun = true;
-    private viewController = new ViewControl(SortType.InsertSort);
+    private viewController = ViewControl.getController(SortType.InsertSort);
 
     public constructor() {
         this.currentNum = 1;
@@ -153,7 +182,6 @@ class InertSort implements Sorter {
         }
         else {
             this.isSorted = true;
-
             alert('排序完成');
         }
     }
@@ -192,7 +220,7 @@ class ShellSort implements Sorter {
     private isSorted: boolean = false;
     private isFirstRun = true;
     private controlFlag1 = true;
-    private viewController = new ViewControl(SortType.ShellSort);
+    private viewController = ViewControl.getController(SortType.ShellSort);
 
     public constructor() {
         this.currentNum = 1;
@@ -280,7 +308,7 @@ class SelectSort implements Sorter {
     private numsList: Array<number>;
     private isSorted: boolean = false;
     private isFirstRun = true;
-    private viewController = new ViewControl(SortType.SelectSort);
+    private viewController = ViewControl.getController(SortType.SelectSort);
 
     public constructor() {
         this.currentNum = 1;
@@ -346,7 +374,7 @@ class BubbleSort implements Sorter {
     private numsList: Array<number>;
     private isSorted: boolean = false;
     private isFirstRun = true;
-    private viewController = new ViewControl(SortType.BubbleSort);
+    private viewController = ViewControl.getController(SortType.BubbleSort);
 
     public constructor() {
         this.currentNum = 1;
@@ -403,6 +431,130 @@ class BubbleSort implements Sorter {
 }
 
 
+class QuickSort implements Sorter {
+    private currentBase: number;
+    private numsList: Array<number>;
+    private isSorted: boolean = false;
+    private isFirstRun = true;
+    private left: number;
+    private right: number;
+    private tmp: number;
+    private tHigh: number;
+    private tLow: number;
+    private flag: number=0;
+    private controlFlag = true;
+    private reFlag = true;
+    private highFlag = true;
+    private lowFlag = true;
+    private stack = new Array<number>();
+    private viewController = ViewControl.getController(SortType.BubbleSort);
+
+    public constructor() {
+    }
+    private Record: { left: number, right: number };
+    sort(): void {
+        if (this.isFirstRun) {
+            //console.log('first run');
+            this.viewController.prepareData();
+            this.numsList = this.viewController.getNumsList();
+            this.isFirstRun = false;
+            this.stack.push(0);
+            this.stack.push(this.numsList.length - 1);
+        }
+        if (this.reFlag) {
+            //console.log('reFlag');
+            if (this.stack.length == 0) {
+                this.viewController.movePointer(this.currentBase, this.left, this.right, true);
+                this.isSorted = true;
+                alert('排序完成!');
+                return;
+            }
+            this.right = this.stack.pop();
+            this.tHigh = this.right;
+            this.left = this.stack.pop();
+            this.tLow = this.left;
+            //console.log('出栈');
+            //console.log('l = ', this.left, ' h = ', this.right);
+            //console.log('栈内', this.stack.toString());
+            this.reFlag = false;
+        }
+        if (this.left <= this.right) {
+            //console.log('left=' + this.left + '<' + 'right= ' + this.right);
+            if (this.controlFlag) {
+                this.tmp = this.numsList[this.left];
+                //console.log('当前基准 ', this.tmp);
+                this.currentBase = this.left;
+                this.viewController.movePointer(this.currentBase, this.left, this.right, false);
+                this.controlFlag = false;
+            }
+            if (this.highFlag && this.left < this.right) {
+                if (this.numsList[this.right] >= this.tmp) {
+                    //console.log(this.numsList[this.right], '>=', this.tmp);
+                    this.right--;
+                    this.flag--;
+                    this.viewController.movePointer(this.currentBase, this.left, this.right, false);
+                }
+                else {
+                    this.numsList[this.left] = this.numsList[this.right];
+                    this.viewController.swapDiv(this.right, this.left);
+                    //console.log('lst[', this.left, ']= ', this.numsList[this.right]);
+                    this.highFlag = false;
+                    this.lowFlag = true;
+                }
+            }
+            else if (this.lowFlag && this.left < this.right) {
+                if (this.numsList[this.left] <= this.tmp) {
+                    //console.log(this.numsList[this.left], '<=', this.tmp);
+                    this.left++;
+                    this.flag++;
+                    this.viewController.movePointer(this.currentBase, this.left, this.right, false);
+                }
+                else {
+                    this.numsList[this.right] = this.numsList[this.left];
+                    //console.log('lst[', this.right, ']= ', this.numsList[this.left]);
+                    this.viewController.swapDiv(this.left, this.right);
+                    this.lowFlag = false;
+                    this.highFlag = true;
+                }
+
+            }
+            else {
+                this.right--;
+            }
+        }
+        else {
+            //console.log('left=' + this.left + '>=' + 'right= ' + this.right);
+            //console.log('flag=',this.flag);
+            this.numsList[this.left] = this.tmp;
+            if (this.tHigh == this.left && this.flag > 0) this.viewController.swapDiv(this.left, this.currentBase);
+            //console.log('lst[', this.left, ']= ', this.tmp);
+            this.controlFlag = true;
+            //console.log('left= ', this.left, 'tLow= ', this.tLow, 'tHigh= ', this.tHigh);
+            if (this.left + 1 < this.tHigh) {
+                //console.log('右侧入栈');
+                this.stack.push(this.left + 1);
+                this.stack.push(this.tHigh);
+                //console.log(this.stack);
+            }
+            if (this.tLow < this.left - 1) {
+                //console.log('左侧入栈');
+                this.stack.push(this.tLow);
+                this.stack.push(this.left - 1);
+                //console.log(this.stack);
+            }
+            this.reFlag = true;
+        }
+    }
+    isFinished(): boolean {
+        return this.isSorted;
+    }
+    getNumsList(): number[] {
+        return this.numsList;
+    }
+
+
+}
+
 
 
 
@@ -455,12 +607,19 @@ function radioChange(): void {
         $('#pointl').css('left', '21.25vw');
         $('#point').css('left', '35vw');
     }
+    else if ($('#quS').prop('checked')) {
+        sorter = new QuickSort();
+        $('#desc1').text('红色方块表示基准值');
+        $('#pointr').css('left', '64.25vw');
+        $('#pointl').css('left', '12.25vw');
+        $('#point').css('left', '8vw');
+    }
 
 }
 
 //let sorter = new SelectSort();
 
-function sort() {
+function sort(): void {
     sorter.sort();
 }
 /*

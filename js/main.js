@@ -15,6 +15,18 @@ var ViewControl = (function () {
         this.sortType = sortType;
         this.titleList = new Array();
     }
+    ViewControl.getController = function (sortType) {
+        if (this.viewControl == null) {
+            this.viewControl = new ViewControl(sortType);
+        }
+        else {
+            this.viewControl.numsList = new Array();
+            this.viewControl.divList = new Array();
+            this.viewControl.sortType = sortType;
+            this.viewControl.titleList = new Array();
+        }
+        return this.viewControl;
+    };
     ViewControl.prototype.prepareData = function () {
         var _this = this;
         ViewControl.divIdName.forEach(function (element) {
@@ -25,6 +37,7 @@ var ViewControl = (function () {
         $('#seS').css('display', 'none');
         $('#buS').css('display', 'none');
         $('#shS').css('display', 'none');
+        $('#quS').css('display', 'none');
         this.divList.forEach(function (element) {
             if (isNaN(parseInt(element.text()))) {
                 throw new TypeError('非法类型!');
@@ -45,6 +58,19 @@ var ViewControl = (function () {
         var tt = this.divList[lhs];
         this.divList[lhs] = this.divList[rhs];
         this.divList[rhs] = tt;
+    };
+    ViewControl.prototype.moveDiv = function (lhs, rhs) {
+        this.divList[lhs].animate({ top: '100px' }, { queue: true, duration: 600 })
+            .animate({ left: ViewControl.divWidthCoord[rhs] }, { queue: true, duration: 600 })
+            .animate({ top: '0px' }, { queue: true, duration: 600 });
+        this.divList[rhs].animate({ top: '50px' }, { queue: true, duration: 600 });
+        var tt = this.divList[lhs];
+        this.divList[lhs] = this.divList[rhs];
+        this.divList[rhs] = tt;
+    };
+    ViewControl.prototype.downDiv = function (div, target) {
+        this.divList[div].animate({ left: ViewControl.divWidthCoord[target] }, { queue: true, duration: 600 })
+            .animate({ top: '0px' }, { queue: true, duration: 600 });
     };
     ViewControl.prototype.movePointer = function (currentNum, leftPoint, rightPoint, isFine) {
         if (isFine) {
@@ -68,7 +94,7 @@ var InertSort = (function () {
     function InertSort() {
         this.isSorted = false;
         this.isFirstRun = true;
-        this.viewController = new ViewControl(SortType.InsertSort);
+        this.viewController = ViewControl.getController(SortType.InsertSort);
         this.currentNum = 1;
         this.lastNum = 0;
     }
@@ -130,7 +156,7 @@ var ShellSort = (function () {
         this.isSorted = false;
         this.isFirstRun = true;
         this.controlFlag1 = true;
-        this.viewController = new ViewControl(SortType.ShellSort);
+        this.viewController = ViewControl.getController(SortType.ShellSort);
         this.currentNum = 1;
         this.lastNum = 0;
     }
@@ -199,7 +225,7 @@ var SelectSort = (function () {
     function SelectSort() {
         this.isSorted = false;
         this.isFirstRun = true;
-        this.viewController = new ViewControl(SortType.SelectSort);
+        this.viewController = ViewControl.getController(SortType.SelectSort);
         this.currentNum = 1;
         this.maxNums = 0;
         this.currentMaxIndex = 0;
@@ -254,7 +280,7 @@ var BubbleSort = (function () {
     function BubbleSort() {
         this.isSorted = false;
         this.isFirstRun = true;
-        this.viewController = new ViewControl(SortType.BubbleSort);
+        this.viewController = ViewControl.getController(SortType.BubbleSort);
         this.currentNum = 1;
         this.recNums = 0;
     }
@@ -302,6 +328,100 @@ var BubbleSort = (function () {
     };
     return BubbleSort;
 }());
+var QuickSort = (function () {
+    function QuickSort() {
+        this.isSorted = false;
+        this.isFirstRun = true;
+        this.flag = 0;
+        this.controlFlag = true;
+        this.reFlag = true;
+        this.highFlag = true;
+        this.lowFlag = true;
+        this.stack = new Array();
+        this.viewController = ViewControl.getController(SortType.BubbleSort);
+    }
+    QuickSort.prototype.sort = function () {
+        if (this.isFirstRun) {
+            this.viewController.prepareData();
+            this.numsList = this.viewController.getNumsList();
+            this.isFirstRun = false;
+            this.stack.push(0);
+            this.stack.push(this.numsList.length - 1);
+        }
+        if (this.reFlag) {
+            if (this.stack.length == 0) {
+                this.viewController.movePointer(this.currentBase, this.left, this.right, true);
+                this.isSorted = true;
+                alert('排序完成!');
+                return;
+            }
+            this.right = this.stack.pop();
+            this.tHigh = this.right;
+            this.left = this.stack.pop();
+            this.tLow = this.left;
+            this.reFlag = false;
+        }
+        if (this.left <= this.right) {
+            if (this.controlFlag) {
+                this.tmp = this.numsList[this.left];
+                this.currentBase = this.left;
+                this.viewController.movePointer(this.currentBase, this.left, this.right, false);
+                this.controlFlag = false;
+            }
+            if (this.highFlag && this.left < this.right) {
+                if (this.numsList[this.right] >= this.tmp) {
+                    this.right--;
+                    this.flag--;
+                    this.viewController.movePointer(this.currentBase, this.left, this.right, false);
+                }
+                else {
+                    this.numsList[this.left] = this.numsList[this.right];
+                    this.viewController.swapDiv(this.right, this.left);
+                    this.highFlag = false;
+                    this.lowFlag = true;
+                }
+            }
+            else if (this.lowFlag && this.left < this.right) {
+                if (this.numsList[this.left] <= this.tmp) {
+                    this.left++;
+                    this.flag++;
+                    this.viewController.movePointer(this.currentBase, this.left, this.right, false);
+                }
+                else {
+                    this.numsList[this.right] = this.numsList[this.left];
+                    this.viewController.swapDiv(this.left, this.right);
+                    this.lowFlag = false;
+                    this.highFlag = true;
+                }
+            }
+            else {
+                this.right--;
+            }
+        }
+        else {
+            this.numsList[this.left] = this.tmp;
+            if (this.tHigh == this.left && this.flag > 0)
+                this.viewController.swapDiv(this.left, this.currentBase);
+            this.controlFlag = true;
+            if (this.left + 1 < this.tHigh) {
+                this.stack.push(this.left + 1);
+                this.stack.push(this.tHigh);
+            }
+            if (this.tLow < this.left - 1) {
+                this.stack.push(this.tLow);
+                this.stack.push(this.left - 1);
+            }
+            this.reFlag = true;
+        }
+    };
+    QuickSort.prototype.isFinished = function () {
+        return this.isSorted;
+    };
+    QuickSort.prototype.getNumsList = function () {
+        return this.numsList;
+    };
+    return QuickSort;
+}());
 function inpuo(inputnum, target) {
     var inp = $('#' + inputnum);
     if (inp.val() == '' || !inp.val())
@@ -341,6 +461,13 @@ function radioChange() {
         $('#pointr').css('left', '10.25vw');
         $('#pointl').css('left', '21.25vw');
         $('#point').css('left', '35vw');
+    }
+    else if ($('#quS').prop('checked')) {
+        sorter = new QuickSort();
+        $('#desc1').text('红色方块表示基准值');
+        $('#pointr').css('left', '64.25vw');
+        $('#pointl').css('left', '12.25vw');
+        $('#point').css('left', '8vw');
     }
 }
 function sort() {
