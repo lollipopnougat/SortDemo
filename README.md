@@ -6,18 +6,19 @@
 
 ### 设计模式
 
-采用了策略模式，将排序算法封装，对外采用统一的接口
+采用了**策略模式**，将排序算法封装，对外采用统一的接口
+视图控制类采用了**单例模式**，每次获取的都是一个单例
 
 ## 注意
 
 * 请确保安装了 `nodejs` 和 `npm`
-* 使用了 `TypeScript`<br>
-  全局安装
+* 使用 `TypeScript`<br>
+  全局安装 `ts` 编译器
   ```
   npm i -g typescript
   ```
 * 使用了 `Less`<br>
-  全局安装
+  全局安装 `less` 编译器
   ```
   npm i -g less
   ```
@@ -52,6 +53,9 @@
 * <del>冒泡排序 (BubbleSort)</del>
 * <del>快速排序 (QuickSort)</del>
 * <del>简单选择排序 (SelectSort)</del>
-* 堆排序 (HeapSort)
+
+暂时摸了，剩下这俩以后再说
+* 堆排序 (HeapSort) 
 * 归并排序 (MergeSort)
+
 
