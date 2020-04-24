@@ -15,6 +15,21 @@ enum SortType {
     MergeSort
 }
 
+class MyAnimation {
+    private element: JQuery<HTMLElement>;
+    public constructor(elem: JQuery<HTMLElement>) {
+        this.element = elem;
+    }
+    public transportX(x: number) {
+        this.element.animate({
+            left: '+=' + x + 'vw'
+        }, 
+        { 
+            queue: true, duration: 600 
+        });
+    }
+}
+
 // 视图控制类
 class ViewControl {
 
@@ -138,6 +153,7 @@ class ViewControl {
 }
 
 // 直插法
+/*
 class InertSort implements Sorter {
     private currentNum: number;
     private lastNum: number;
@@ -207,8 +223,38 @@ class InertSort implements Sorter {
         this.numsList[lhs] = this.numsList[rhs];
         this.numsList[rhs] = tmp;
     }
-}
+}*/
 
+class InertSort implements Sorter {
+    private numsList: number[];
+    private isSorted: boolean = false;
+    private viewController = ViewControl.getController(SortType.InsertSort);
+    sort(): void {
+        this.viewController.prepareData();
+        this.numsList = this.viewController.getNumsList();
+        let max_index = 0;
+        for (let i = 0; i < this.numsList.length - 1; i++) {
+            for (let j = 0; j < this.numsList.length - i; j++) {
+                if (this.numsList[j] > this.numsList[max_index]) {
+                    max_index = j;
+                }
+                let tmp = this.numsList[this.numsList.length - i - 1];
+                this.numsList[this.numsList.length - i - 1] = this.numsList[max_index];
+                this.numsList[max_index] = tmp;
+
+            }
+            max_index = 0;
+
+        }
+    }
+    isFinished(): boolean {
+        return this.isSorted;
+    }
+    getNumsList(): number[] {
+        return this.numsList;
+    }
+
+}
 
 //希尔排序 
 class ShellSort implements Sorter {
@@ -441,7 +487,7 @@ class QuickSort implements Sorter {
     private tmp: number;
     private tHigh: number;
     private tLow: number;
-    private flag: number=0;
+    private flag: number = 0;
     private controlFlag = true;
     private reFlag = true;
     private highFlag = true;
