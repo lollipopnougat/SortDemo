@@ -9,7 +9,8 @@
 @color5: #289714;
 @color6: #842ab8;
 @color7: #db5000;
-
+@point1: #48ad59;
+@point2: #178bce;
 
 h1 {
   color: @datacolor;
@@ -59,18 +60,18 @@ input::-webkit-inner-spin-button {
 .pd {
   position: relative;
   left: 12.25vw; // 12.25 21.25 30.25 39.25 48.25 57.25 66.25
-  color: #48ad59;
+  color: @point1;
   font-size: 3vw;
 }
 .ps {
   position: relative;
   left: 19vw; //7.75 19 25.5 34.5 43.5 52.5 61.5
-  color: #178bce;
+  color: @point2;
   font-size: 3vw;
 }
 .btn {
   color: #fff;
-  background-color: #0099ff;
+  background-color: @datacolor;
   margin-top: 10px;
   padding: 10px 20px;
   cursor: pointer;
@@ -79,14 +80,17 @@ input::-webkit-inner-spin-button {
   transition: all 0.2s ease-out 0s;
 }
 .btn:hover {
-  background-color: #0077ff;
-  border-radius: 10px;
+  background-color: darken(@datacolor, 20%);
+  //border-radius: 10px;
+}
+.btn:active {
+    background-color: darken(@datacolor, 30%);;
 }
 .blockbox {
   display: inline-block;
   width: @datawidth;
   height: 20px;
-  vertical-align: bottom;
+  vertical-align: top;
   background-color: @datacolor;
   color: #fff;
   border-radius: 5px;
@@ -141,52 +145,62 @@ input::-webkit-inner-spin-button {
     font-size: 14pt;
   }
 }
-.inpu {
-  border: #0099ff solid 1px;
-  border-radius: 5px;
-  font-size: 4vw;
-  width: @datawidth;
-  margin-right: -1px;
-  color: #0099ff;
-  text-align: center;
+
+.input-box {
+    border: 1px solid @datacolor;
+    border-radius: 5px;
+    font-size: 2vw;
+    color: @datacolor;
+    text-align: center;
+    height: 35px;
+    margin-top: 10px;
 }
+// .inpu {
+//   border: #0099ff solid 1px;
+//   border-radius: 5px;
+//   font-size: 4vw;
+//   width: @datawidth;
+//   margin-right: -1px;
+//   color: #0099ff;
+//   text-align: center;
+// }
 
 .dataleftc(@num, @color) {
   left: ((@datawidth + 1) * @num);
   background-color: @color;
 }
 
-.one {
+.rect0 {
   .dataleftc(1vw, @color1);
   height: 49px;
 }
 
-.two {
+.rect1 {
   .dataleftc(2vw, @color2);
   height: 96px;
 }
 
-.three {
+.rect2 {
   .dataleftc(3vw, @color3);
   height: 32px;
 }
 
-.four {
+.rect3 {
   .dataleftc(4vw, @color4);
   height: 128px;
 }
 
-.five {
+.rect4 {
   .dataleftc(5vw, @color5);
   height: 57px;
 }
 
-.six {
+.rect5 {
   .dataleftc(6vw, @color6);
   height: 64px;
 }
 
-.seven {
+.rect6 {
   .dataleftc(7vw, @color7);
   height: 22px;
 }

@@ -63,14 +63,16 @@ input::-webkit-inner-spin-button {
   transition: all 0.2s ease-out 0s;
 }
 .btn:hover {
-  background-color: #0077ff;
-  border-radius: 10px;
+  background-color: #005c99;
+}
+.btn:active {
+  background-color: #003d66;
 }
 .blockbox {
   display: inline-block;
   width: 8vw;
   height: 20px;
-  vertical-align: bottom;
+  vertical-align: top;
   background-color: #0099ff;
   color: #fff;
   border-radius: 5px;
@@ -121,46 +123,46 @@ input::-webkit-inner-spin-button {
     font-size: 14pt;
   }
 }
-.inpu {
-  border: #0099ff solid 1px;
+.input-box {
+  border: 1px solid #0099ff;
   border-radius: 5px;
-  font-size: 4vw;
-  width: 8vw;
-  margin-right: -1px;
+  font-size: 2vw;
   color: #0099ff;
   text-align: center;
+  height: 35px;
+  margin-top: 10px;
 }
-.one {
+.rect0 {
   left: 9vw;
   background-color: #00dda6;
   height: 49px;
 }
-.two {
+.rect1 {
   left: 18vw;
   background-color: #0077ff;
   height: 96px;
 }
-.three {
+.rect2 {
   left: 27vw;
   background-color: #e62a53;
   height: 32px;
 }
-.four {
+.rect3 {
   left: 36vw;
   background-color: #f0cd08;
   height: 128px;
 }
-.five {
+.rect4 {
   left: 45vw;
   background-color: #289714;
   height: 57px;
 }
-.six {
+.rect5 {
   left: 54vw;
   background-color: #842ab8;
   height: 64px;
 }
-.seven {
+.rect6 {
   left: 63vw;
   background-color: #db5000;
   height: 22px;

@@ -1,16 +1,22 @@
 {
-  "name": "sort-demo",
+  "name": "sortvisualneo",
   "version": "1.0.0",
-  "description": "",
+  "description": "sortvisual",
   "main": "index.html",
   "scripts": {
-    "start": "echo \"请打开浏览器访问http://localhost:8080\" && http-server",
-    "compile": "cd css && lessc style.less style.css && cd .. && tsc"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "tsc && cd css && less style.less style.css"
   },
+  "keywords": [
+    "sortvisual"
+  ],
   "author": "lnp",
   "license": "MIT",
   "dependencies": {
-    "@types/jquery": "^3.3.31"
+    "@types/jquery": "^3.3.38",
+    "jquery": "^3.5.1"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "typescript": "^3.9.2"
+  }
 }

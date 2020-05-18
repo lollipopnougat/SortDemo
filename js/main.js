@@ -1,476 +1,251 @@
-var SortType;
-(function (SortType) {
-    SortType[SortType["InsertSort"] = 0] = "InsertSort";
-    SortType[SortType["ShellSort"] = 1] = "ShellSort";
-    SortType[SortType["SelectSort"] = 2] = "SelectSort";
-    SortType[SortType["BubbleSort"] = 3] = "BubbleSort";
-    SortType[SortType["QuickSort"] = 4] = "QuickSort";
-    SortType[SortType["HeapSort"] = 5] = "HeapSort";
-    SortType[SortType["MergeSort"] = 6] = "MergeSort";
-})(SortType || (SortType = {}));
 var ViewControl = (function () {
-    function ViewControl(sortType) {
-        this.numsList = new Array();
-        this.divList = new Array();
-        this.sortType = sortType;
-        this.titleList = new Array();
-    }
-    ViewControl.getController = function (sortType) {
-        if (this.viewControl == null) {
-            this.viewControl = new ViewControl(sortType);
-        }
-        else {
-            this.viewControl.numsList = new Array();
-            this.viewControl.divList = new Array();
-            this.viewControl.sortType = sortType;
-            this.viewControl.titleList = new Array();
-        }
-        return this.viewControl;
-    };
-    ViewControl.prototype.prepareData = function () {
+    function ViewControl() {
         var _this = this;
-        ViewControl.divIdName.forEach(function (element) {
-            _this.divList.push($('#' + element));
-            $('#i-' + element.substr(0, 2)).attr('disabled', 'true');
-        });
-        $('#inS').css('display', 'none');
-        $('#seS').css('display', 'none');
-        $('#buS').css('display', 'none');
-        $('#shS').css('display', 'none');
-        $('#quS').css('display', 'none');
-        this.divList.forEach(function (element) {
-            if (isNaN(parseInt(element.text()))) {
-                throw new TypeError('非法类型!');
+        this.pointList = [];
+        this.pointLocationX = [0, 1, 1];
+        this.numList = [49, 96, 32, 128, 57, 64, 22];
+        this.selectedType = 'InsertSort';
+        this.getSorter = function () {
+            var sort;
+            switch (_this.selectedType) {
+                case 'InsertSort':
+                    sort = new InsertSort(_this.numList, _this);
+                    break;
+                case 'SelectSort':
+                    sort = new SelectSort(_this.numList, _this);
+                    break;
+                case 'BubbleSort':
+                    sort = new BubbleSort(_this.numList, _this);
+                    break;
+                default: throw new Error("啊咧，这个还未实现的");
             }
-            _this.numsList.push(parseInt(element.text()));
+            return sort;
+        };
+        this.updateValues = function () {
+            $('#val-area').children().remove();
+            _this.rectList.length = 0;
+            var val_str = $('#input-box').val();
+            _this.numList.length = 0;
+            val_str.split(',').forEach(function (el) {
+                _this.numList.push(parseInt(el));
+            });
+            _this.rectList = ViewControl.buildDivElement(_this.numList);
+            _this.rectList.forEach(function (el) {
+                $('#val-area').append(el);
+            });
+        };
+        this.delayItem = function (index, delayTime) {
+            _this.rectList[index].animate({ left: index * 9 + 9 + "vw" }, { duration: delayTime, queue: true });
+        };
+        this.delayAllItem = function (delayTime) {
+            _this.rectList.forEach(function (el, index) {
+                el.animate({ left: index * 9 + 9 + "vw" }, { duration: delayTime, queue: true });
+            });
+        };
+        this.delayPointer = function (index, delayTime) {
+            var offset = 12;
+            if (index == 1)
+                offset = 10;
+            if (index == 2)
+                offset = 8;
+            _this.pointList[index].animate({ left: _this.pointLocationX[index] * 9 + offset + "vw" }, { duration: delayTime, queue: true });
+        };
+        this.swapItem = function (l, r) {
+            _this.rectList[l].animate({ left: r * 9 + 9 + "vw" }, { duration: 500, queue: true });
+            _this.rectList[r].animate({ left: l * 9 + 9 + "vw" }, { duration: 500, queue: true });
+            for (var i = 0; i < _this.rectList.length; i++) {
+                if (i == l || i == r) {
+                    continue;
+                }
+                _this.delayItem(i, 500);
+            }
+            var tmp = _this.rectList[l];
+            _this.rectList[l] = _this.rectList[r];
+            _this.rectList[r] = tmp;
+        };
+        this.movePointer = function (index, toIndex, delayTime) {
+            _this.pointLocationX[index] = toIndex;
+            var offset = 12;
+            if (index == 1)
+                offset = 10;
+            if (index == 2)
+                offset = 8;
+            _this.pointList[index].animate({ left: toIndex * 9 + offset + "vw" }, { duration: delayTime, queue: true });
+        };
+        this.rectList = ViewControl.buildDivElement(this.numList);
+        this.rectList.forEach(function (el) {
+            $('#val-area').append(el);
         });
-    };
-    ViewControl.prototype.getNumsList = function () {
-        return this.numsList;
-    };
-    ViewControl.prototype.swapDiv = function (lhs, rhs) {
-        this.divList[lhs].animate({ top: '100px' }, { queue: true, duration: 600 })
-            .animate({ left: ViewControl.divWidthCoord[rhs] }, { queue: true, duration: 600 })
-            .animate({ top: '0px' }, { queue: true, duration: 600 });
-        this.divList[rhs].animate({ top: '50px' }, { queue: true, duration: 600 })
-            .animate({ left: ViewControl.divWidthCoord[lhs] }, { queue: true, duration: 600 })
-            .animate({ top: '0px' }, { queue: true, duration: 600 });
-        var tt = this.divList[lhs];
-        this.divList[lhs] = this.divList[rhs];
-        this.divList[rhs] = tt;
-    };
-    ViewControl.prototype.moveDiv = function (lhs, rhs) {
-        this.divList[lhs].animate({ top: '100px' }, { queue: true, duration: 600 })
-            .animate({ left: ViewControl.divWidthCoord[rhs] }, { queue: true, duration: 600 })
-            .animate({ top: '0px' }, { queue: true, duration: 600 });
-        this.divList[rhs].animate({ top: '50px' }, { queue: true, duration: 600 });
-        var tt = this.divList[lhs];
-        this.divList[lhs] = this.divList[rhs];
-        this.divList[rhs] = tt;
-    };
-    ViewControl.prototype.downDiv = function (div, target) {
-        this.divList[div].animate({ left: ViewControl.divWidthCoord[target] }, { queue: true, duration: 600 })
-            .animate({ top: '0px' }, { queue: true, duration: 600 });
-    };
-    ViewControl.prototype.movePointer = function (currentNum, leftPoint, rightPoint, isFine) {
-        if (isFine) {
-            $('#pointl').css('color', '#fff');
-            $('#pointr').css('color', '#fff');
-            $('#point').css('color', '#48ad59');
+        $('#submit-btn').on('click', function () {
+            _this.updateValues();
+        });
+        this.pointList.push($('#point-l'));
+        this.pointList.push($('#point-r'));
+        this.pointList.push($('#point'));
+        $('#start').on('click', function () {
+            var radiolist = $('input[name="select-type"]');
+            for (var i = 0; i < radiolist.length; i++) {
+                var tmp = radiolist[i];
+                if (tmp.checked) {
+                    _this.selectedType = tmp.value;
+                    break;
+                }
+            }
+            console.log(_this.selectedType);
+            try {
+                var sort = _this.getSorter();
+                sort.sort();
+            }
+            catch (er) {
+                alert(er.toString());
+            }
+        });
+    }
+    ViewControl.getViewControl = function () {
+        if (!ViewControl.inViewControl) {
+            ViewControl.inViewControl = new ViewControl();
         }
-        else {
-            $('#point').animate({ left: ViewControl.pointerCoord[currentNum].toString() + 'vw' });
-            $('#pointl').animate({ left: ViewControl.pointerWidth[leftPoint].toString() + 'vw' });
-            $('#pointr').animate({ left: (ViewControl.pointerWidth[rightPoint] - 2).toString() + 'vw' });
-        }
+        return ViewControl.inViewControl;
     };
-    ViewControl.divIdName = ['one', 'two', 'three', 'four', 'five', 'six', 'seven'];
-    ViewControl.divWidthCoord = ['9vw', '18vw', '27vw', '36vw', '45vw', '54vw', '63vw'];
-    ViewControl.pointerCoord = [8, 17, 26, 35, 44, 53, 62];
-    ViewControl.pointerWidth = [12.25, 21.25, 30.25, 39.25, 48.25, 57.25, 66.25, 75.25];
+    ViewControl.buildDivElement = function (list) {
+        var tmp = [];
+        if (list.length > 7 || list.length < 1) {
+            throw new Error('数组长度非法');
+        }
+        var num = 0;
+        list.forEach(function (el) {
+            tmp.push($("<div class=\"blockbox rect" + num + "\" id=\"rect" + num + "\">" + el + "</div>"));
+            num++;
+        });
+        return tmp;
+    };
     return ViewControl;
 }());
-var InertSort = (function () {
-    function InertSort() {
-        this.isSorted = false;
-        this.isFirstRun = true;
-        this.viewController = ViewControl.getController(SortType.InsertSort);
-        this.currentNum = 1;
-        this.lastNum = 0;
+var InsertSort = (function () {
+    function InsertSort(nums, vc) {
+        var _this = this;
+        this.numList = [];
+        this.finished = false;
+        this.swap = function (l, r) {
+            var tmp = _this.numList[l];
+            _this.numList[l] = _this.numList[r];
+            _this.numList[r] = tmp;
+            _this.viewControl.swapItem(l, r);
+        };
+        this.sort = function () {
+            for (var i = 1; i < _this.numList.length; i++) {
+                var j = i;
+                while (j >= 1 && _this.numList[j - 1] > _this.numList[j]) {
+                    _this.swap(j, j - 1);
+                    _this.viewControl.movePointer(1, j - 1, 500);
+                    _this.viewControl.delayPointer(2, 500);
+                    j--;
+                    _this.viewControl.movePointer(0, j - 1, 500);
+                }
+                _this.viewControl.movePointer(2, i + 1, 500);
+                _this.viewControl.delayPointer(1, 500);
+                _this.viewControl.delayPointer(0, 500);
+                _this.viewControl.delayAllItem(500);
+            }
+            _this.finished = true;
+        };
+        this.isFinished = function () {
+            return _this.finished;
+        };
+        this.numList = nums;
+        this.viewControl = vc;
     }
-    InertSort.prototype.sort = function () {
-        if (this.isFirstRun) {
-            this.viewController.prepareData();
-            this.numsList = this.viewController.getNumsList();
-            this.isFirstRun = false;
-        }
-        if (this.currentNum < this.numsList.length) {
-            if (this.lastNum >= 0) {
-                if (this.numsList[this.lastNum] > this.numsList[this.lastNum + 1]) {
-                    this.swap(this.lastNum, this.lastNum + 1);
-                    this.viewController.swapDiv(this.lastNum, this.lastNum + 1);
-                    this.lastNum--;
-                }
-                else {
-                    this.currentNum++;
-                    this.lastNum = this.currentNum - 1;
-                }
-            }
-            else {
-                this.currentNum++;
-                this.lastNum = this.currentNum - 1;
-            }
-            if (this.lastNum < 0) {
-                this.viewController.movePointer(this.currentNum, this.lastNum + 1, this.lastNum + 1, (this.currentNum >= this.numsList.length));
-            }
-            else {
-                this.viewController.movePointer(this.currentNum, this.lastNum, this.lastNum + 1, (this.currentNum >= this.numsList.length));
-            }
-        }
-        else {
-            this.isSorted = true;
-            alert('排序完成');
-        }
-    };
-    InertSort.prototype.getNumsList = function () {
-        return this.numsList;
-    };
-    InertSort.prototype.isFinished = function () {
-        return this.isSorted;
-    };
-    InertSort.prototype.getCurrentNum = function () {
-        return this.currentNum;
-    };
-    InertSort.prototype.getLastNum = function () {
-        return this.lastNum;
-    };
-    InertSort.prototype.swap = function (lhs, rhs) {
-        var tmp = this.numsList[lhs];
-        this.numsList[lhs] = this.numsList[rhs];
-        this.numsList[rhs] = tmp;
-    };
-    return InertSort;
-}());
-var ShellSort = (function () {
-    function ShellSort() {
-        this.isSorted = false;
-        this.isFirstRun = true;
-        this.controlFlag1 = true;
-        this.viewController = ViewControl.getController(SortType.ShellSort);
-        this.currentNum = 1;
-        this.lastNum = 0;
-    }
-    ShellSort.prototype.sort = function () {
-        if (this.isFirstRun) {
-            this.viewController.prepareData();
-            this.numsList = this.viewController.getNumsList();
-            this.gap = Math.floor(this.numsList.length / 2);
-            this.currentNum = this.gap;
-            this.isFirstRun = false;
-        }
-        if (this.gap >= 1) {
-            if (this.currentNum < this.numsList.length) {
-                if (this.controlFlag1) {
-                    this.tmp = this.numsList[this.currentNum];
-                    this.lastNum = this.currentNum - this.gap;
-                    this.viewController.movePointer(this.gap, this.currentNum, this.lastNum, (this.gap < 1));
-                    this.controlFlag1 = false;
-                }
-                else {
-                    this.viewController.movePointer(this.gap, this.currentNum, this.lastNum, (this.gap < 1));
-                }
-                if (this.lastNum >= 0 && this.numsList[this.lastNum] > this.tmp) {
-                    this.swap(this.lastNum + this.gap, this.lastNum);
-                    this.viewController.swapDiv(this.lastNum + this.gap, this.lastNum);
-                    this.lastNum = this.lastNum - this.gap;
-                }
-                else {
-                    this.currentNum++;
-                    this.lastNum = this.currentNum - this.gap;
-                    this.viewController.movePointer(this.gap, this.currentNum, this.lastNum, (this.gap < 1));
-                    this.controlFlag1 = true;
-                }
-            }
-            else {
-                this.gap = Math.floor(this.gap / 2);
-                this.currentNum = this.gap;
-                this.viewController.movePointer(this.gap, this.currentNum, this.lastNum, (this.gap < 1));
-            }
-        }
-        else {
-            this.isSorted = true;
-            alert('排序完成');
-        }
-    };
-    ShellSort.prototype.getNumsList = function () {
-        return this.numsList;
-    };
-    ShellSort.prototype.isFinished = function () {
-        return this.isSorted;
-    };
-    ShellSort.prototype.getCurrentNum = function () {
-        return this.currentNum;
-    };
-    ShellSort.prototype.getLastNum = function () {
-        return this.lastNum;
-    };
-    ShellSort.prototype.swap = function (lhs, rhs) {
-        var tmp = this.numsList[lhs];
-        this.numsList[lhs] = this.numsList[rhs];
-        this.numsList[rhs] = tmp;
-    };
-    return ShellSort;
-}());
-var SelectSort = (function () {
-    function SelectSort() {
-        this.isSorted = false;
-        this.isFirstRun = true;
-        this.viewController = ViewControl.getController(SortType.SelectSort);
-        this.currentNum = 1;
-        this.maxNums = 0;
-        this.currentMaxIndex = 0;
-    }
-    SelectSort.prototype.sort = function () {
-        if (this.isFirstRun) {
-            this.viewController.prepareData();
-            this.numsList = this.viewController.getNumsList();
-            this.isFirstRun = false;
-        }
-        if (this.currentNum < this.numsList.length - this.maxNums) {
-            if (this.numsList[this.currentNum] > this.numsList[this.currentMaxIndex]) {
-                this.currentMaxIndex = this.currentNum;
-            }
-            if (this.currentNum == this.numsList.length - this.maxNums - 1) {
-                this.swap(this.numsList.length - this.maxNums - 1, this.currentMaxIndex);
-                this.viewController.swapDiv(this.numsList.length - this.maxNums - 1, this.currentMaxIndex);
-                this.currentNum = 1;
-                this.currentMaxIndex = 0;
-                this.maxNums++;
-            }
-            else {
-                this.currentNum++;
-            }
-            this.viewController.movePointer(this.numsList.length - this.maxNums - 1, this.currentNum, this.currentMaxIndex, (this.maxNums == this.numsList.length - 1));
-        }
-        else {
-            this.isSorted = true;
-            alert('排序完成');
-        }
-    };
-    SelectSort.prototype.getNumsList = function () {
-        return this.numsList;
-    };
-    SelectSort.prototype.isFinished = function () {
-        return this.isSorted;
-    };
-    SelectSort.prototype.getCurrentNum = function () {
-        return this.currentNum;
-    };
-    SelectSort.prototype.getmaxNums = function () {
-        return this.maxNums;
-    };
-    SelectSort.prototype.swap = function (lhs, rhs) {
-        var tmp = this.numsList[lhs];
-        this.numsList[lhs] = this.numsList[rhs];
-        this.numsList[rhs] = tmp;
-    };
-    return SelectSort;
+    return InsertSort;
 }());
 var BubbleSort = (function () {
-    function BubbleSort() {
-        this.isSorted = false;
-        this.isFirstRun = true;
-        this.viewController = ViewControl.getController(SortType.BubbleSort);
-        this.currentNum = 1;
-        this.recNums = 0;
+    function BubbleSort(nums, vc) {
+        var _this = this;
+        this.numList = [];
+        this.finished = false;
+        this.swap = function (l, r) {
+            var tmp = _this.numList[l];
+            _this.numList[l] = _this.numList[r];
+            _this.numList[r] = tmp;
+            _this.viewControl.swapItem(l, r);
+        };
+        this.sort = function () {
+            for (var i = 0; i < _this.numList.length - 1; i++) {
+                for (var j = 0; j < _this.numList.length - i - 1; j++) {
+                    _this.viewControl.movePointer(0, j, 500);
+                    _this.viewControl.movePointer(1, j + 1, 500);
+                    _this.viewControl.delayPointer(2, 500);
+                    _this.viewControl.delayAllItem(500);
+                    if (_this.numList[j] > _this.numList[j + 1]) {
+                        _this.swap(j, j + 1);
+                        _this.viewControl.movePointer(2, _this.numList.length - i - 1, 500);
+                        _this.viewControl.delayPointer(0, 500);
+                        _this.viewControl.delayPointer(1, 500);
+                    }
+                }
+            }
+            _this.viewControl.movePointer(2, 0, 500);
+            _this.finished = true;
+        };
+        this.isFinished = function () {
+            return _this.finished;
+        };
+        this.numList = nums;
+        this.viewControl = vc;
     }
-    BubbleSort.prototype.sort = function () {
-        if (this.isFirstRun) {
-            this.viewController.prepareData();
-            this.numsList = this.viewController.getNumsList();
-            this.isFirstRun = false;
-        }
-        if (this.currentNum < this.numsList.length - this.recNums) {
-            if (this.numsList[this.currentNum - 1] > this.numsList[this.currentNum]) {
-                this.swap(this.currentNum, this.currentNum - 1);
-                this.viewController.swapDiv(this.currentNum, this.currentNum - 1);
-            }
-            if (this.currentNum == this.numsList.length - this.recNums - 1) {
-                this.recNums++;
-                this.currentNum = 1;
-            }
-            else {
-                this.currentNum++;
-            }
-            this.viewController.movePointer(this.numsList.length - this.recNums - 1, this.currentNum, this.currentNum - 1, (this.recNums == this.numsList.length - 1));
-        }
-        else {
-            this.isSorted = true;
-            alert('排序完成');
-        }
-    };
-    BubbleSort.prototype.getNumsList = function () {
-        return this.numsList;
-    };
-    BubbleSort.prototype.isFinished = function () {
-        return this.isSorted;
-    };
-    BubbleSort.prototype.getCurrentNum = function () {
-        return this.currentNum;
-    };
-    BubbleSort.prototype.getrecNums = function () {
-        return this.recNums;
-    };
-    BubbleSort.prototype.swap = function (lhs, rhs) {
-        var tmp = this.numsList[lhs];
-        this.numsList[lhs] = this.numsList[rhs];
-        this.numsList[rhs] = tmp;
-    };
     return BubbleSort;
 }());
-var QuickSort = (function () {
-    function QuickSort() {
-        this.isSorted = false;
-        this.isFirstRun = true;
-        this.flag = 0;
-        this.controlFlag = true;
-        this.reFlag = true;
-        this.highFlag = true;
-        this.lowFlag = true;
-        this.stack = new Array();
-        this.viewController = ViewControl.getController(SortType.BubbleSort);
+var SelectSort = (function () {
+    function SelectSort(nums, vc) {
+        var _this = this;
+        this.numList = [];
+        this.finished = false;
+        this.swap = function (l, r) {
+            var tmp = _this.numList[l];
+            _this.numList[l] = _this.numList[r];
+            _this.numList[r] = tmp;
+            _this.viewControl.swapItem(l, r);
+        };
+        this.sort = function () {
+            var max_index = 0;
+            _this.viewControl.movePointer(2, _this.numList.length - 1, 500);
+            _this.viewControl.delayPointer(0, 500);
+            _this.viewControl.movePointer(1, 0, 500);
+            _this.viewControl.delayAllItem(500);
+            for (var i = 0; i < _this.numList.length - 1; i++) {
+                var j = 0;
+                for (j = 0; j < _this.numList.length - i; j++) {
+                    _this.viewControl.movePointer(1, j, 500);
+                    _this.viewControl.delayPointer(0, 500);
+                    _this.viewControl.delayPointer(2, 500);
+                    _this.viewControl.delayAllItem(500);
+                    if (_this.numList[j] > _this.numList[max_index]) {
+                        max_index = j;
+                        _this.viewControl.movePointer(0, max_index, 500);
+                        _this.viewControl.delayPointer(1, 500);
+                        _this.viewControl.delayPointer(2, 500);
+                        _this.viewControl.delayAllItem(500);
+                    }
+                }
+                _this.swap(_this.numList.length - i - 1, max_index);
+                _this.viewControl.movePointer(0, 0, 500);
+                _this.viewControl.movePointer(1, 0, 500);
+                _this.viewControl.movePointer(2, _this.numList.length - i - 1, 500);
+                max_index = 0;
+            }
+            _this.viewControl.movePointer(0, 0, 500);
+            _this.viewControl.movePointer(1, 0, 500);
+            _this.viewControl.movePointer(2, 0, 500);
+            _this.finished = true;
+        };
+        this.isFinished = function () {
+            return _this.finished;
+        };
+        this.numList = nums;
+        this.viewControl = vc;
     }
-    QuickSort.prototype.sort = function () {
-        if (this.isFirstRun) {
-            this.viewController.prepareData();
-            this.numsList = this.viewController.getNumsList();
-            this.isFirstRun = false;
-            this.stack.push(0);
-            this.stack.push(this.numsList.length - 1);
-        }
-        if (this.reFlag) {
-            if (this.stack.length == 0) {
-                this.viewController.movePointer(this.currentBase, this.left, this.right, true);
-                this.isSorted = true;
-                alert('排序完成!');
-                return;
-            }
-            this.right = this.stack.pop();
-            this.tHigh = this.right;
-            this.left = this.stack.pop();
-            this.tLow = this.left;
-            this.reFlag = false;
-        }
-        if (this.left <= this.right) {
-            if (this.controlFlag) {
-                this.tmp = this.numsList[this.left];
-                this.currentBase = this.left;
-                this.viewController.movePointer(this.currentBase, this.left, this.right, false);
-                this.controlFlag = false;
-            }
-            if (this.highFlag && this.left < this.right) {
-                if (this.numsList[this.right] >= this.tmp) {
-                    this.right--;
-                    this.flag--;
-                    this.viewController.movePointer(this.currentBase, this.left, this.right, false);
-                }
-                else {
-                    this.numsList[this.left] = this.numsList[this.right];
-                    this.viewController.swapDiv(this.right, this.left);
-                    this.highFlag = false;
-                    this.lowFlag = true;
-                }
-            }
-            else if (this.lowFlag && this.left < this.right) {
-                if (this.numsList[this.left] <= this.tmp) {
-                    this.left++;
-                    this.flag++;
-                    this.viewController.movePointer(this.currentBase, this.left, this.right, false);
-                }
-                else {
-                    this.numsList[this.right] = this.numsList[this.left];
-                    this.viewController.swapDiv(this.left, this.right);
-                    this.lowFlag = false;
-                    this.highFlag = true;
-                }
-            }
-            else {
-                this.right--;
-            }
-        }
-        else {
-            this.numsList[this.left] = this.tmp;
-            if (this.tHigh == this.left && this.flag > 0)
-                this.viewController.swapDiv(this.left, this.currentBase);
-            this.controlFlag = true;
-            if (this.left + 1 < this.tHigh) {
-                this.stack.push(this.left + 1);
-                this.stack.push(this.tHigh);
-            }
-            if (this.tLow < this.left - 1) {
-                this.stack.push(this.tLow);
-                this.stack.push(this.left - 1);
-            }
-            this.reFlag = true;
-        }
-    };
-    QuickSort.prototype.isFinished = function () {
-        return this.isSorted;
-    };
-    QuickSort.prototype.getNumsList = function () {
-        return this.numsList;
-    };
-    return QuickSort;
+    return SelectSort;
 }());
-function inpuo(inputnum, target) {
-    var inp = $('#' + inputnum);
-    if (inp.val() == '' || !inp.val())
-        $('#' + target).text('0');
-    else {
-        $('#' + target).text(inp.val());
-        var tmp = parseInt(inp.val());
-        $('#' + target).css('height', tmp.toString() + 'px');
-    }
-}
-var sorter = new InertSort();
-function radioChange() {
-    if ($('#inS').prop('checked')) {
-        sorter = new InertSort();
-        $('#desc1').text('蓝色箭头代表此轮要插入有序列表的数');
-        $('#pointr').css('left', '19vw');
-        $('#pointl').css('left', '12.25vw');
-        $('#point').css('left', '17vw');
-    }
-    else if ($('#seS').prop('checked')) {
-        sorter = new SelectSort();
-        $('#desc1').text('蓝色箭头代表当前找到的最大数');
-        $('#pointr').css('left', '10.25vw');
-        $('#pointl').css('left', '21.25vw');
-        $('#point').css('left', '62vw');
-    }
-    else if ($('#buS').prop('checked')) {
-        sorter = new BubbleSort();
-        $('#desc1').text('箭头指向当前比较数');
-        $('#pointr').css('left', '10.25vw');
-        $('#pointl').css('left', '21.25vw');
-        $('#point').css('left', '62vw');
-    }
-    else if ($('#shS').prop('checked')) {
-        sorter = new ShellSort();
-        $('#desc1').text('红色方块位置索引值表示gap的大小');
-        $('#pointr').css('left', '10.25vw');
-        $('#pointl').css('left', '21.25vw');
-        $('#point').css('left', '35vw');
-    }
-    else if ($('#quS').prop('checked')) {
-        sorter = new QuickSort();
-        $('#desc1').text('红色方块表示基准值');
-        $('#pointr').css('left', '64.25vw');
-        $('#pointl').css('left', '12.25vw');
-        $('#point').css('left', '8vw');
-    }
-}
-function sort() {
-    sorter.sort();
-}
+window.onload = function () {
+    var viewControl = ViewControl.getViewControl();
+};
 //# sourceMappingURL=main.js.map

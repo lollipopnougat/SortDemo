@@ -4,72 +4,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="./css/style.css">
-    <script src="./js/jquery-3.4.1.min.js"></script>
+    <script src="./js/jquery.min.js"></script>
     <script src="./js/main.js"></script>
+    <title>排序演示neo</title>
 
-    <title>排序演示</title>
 </head>
 
 <body>
-    <!--
-    <div class="viewbox">
-       <canvas id="myCanvas" class="canvas" width="800" height="450"></canvas> 
-       <script src="./js/main.js"></script>
-    </div>-->
     <h1>排序演示</h1>
     <div class="txtalgc" id="select-type">
-        <input type="radio" value="InsertSort" name="select-type" checked onchange="radioChange()" id="inS"/>
-        <span class="select-type">直接插入排序</span>
-        <input type="radio" value="SelectSort" name="select-type" onchange="radioChange()" id="seS"/>
+        <input type="radio" value="InsertSort" name="select-type" class="select" checked/>
+        <span class="select-type">直插排序</span>
+        <input type="radio" value="SelectSort" name="select-type" class="select" />
         <span class="select-type">简单选择排序</span>
-        <input type="radio" value="BubbleSort" name="select-type" onchange="radioChange()" id="buS"/>
+        <input type="radio" value="BubbleSort" name="select-type" class="select" />
         <span class="select-type">冒泡排序</span><br>
-        <input type="radio" value="ShellSort" name="select-type" onchange="radioChange()" id="shS"/>
+        <input type="radio" value="ShellSort" name="select-type" class="select" />
         <span class="select-type">希尔排序</span>
-        <input type="radio" value="QuickSort" name="select-type" onchange="radioChange()" id="quS"/>
+        <input type="radio" value="QuickSort" name="select-type" class="select" />
         <span class="select-type">快速排序</span>
     </div>
     <p class="desc" style="display: none;">
         把n个待排序的元素看成为一个有序表和一个无序表<br>开始时有序表中只包含1个元素，无序表中包含有n-1个元素，<br>排序过程中每次从无序表中取出第一个元素，<br>将它插入到有序表中的适当位置，使之成为新的有序表，<br>重复n-1次可完成排序过程。
     </p>
     <div class="inputarea">
-        <input type="number" class="inpu" oninput="inpuo('i-on','one')" id="i-on" value="49" />
+        <!-- <input type="number" class="inpu" oninput="inpuo('i-on','one')" id="i-on" value="49" />
         <input type="number" class="inpu" oninput="inpuo('i-tw','two')" id="i-tw" value="96" />
         <input type="number" class="inpu" oninput="inpuo('i-th','three')" id="i-th" value="32" />
         <input type="number" class="inpu" oninput="inpuo('i-fo','four')" id="i-fo" value="128" />
         <input type="number" class="inpu" oninput="inpuo('i-fi','five')" id="i-fi" value="57" />
         <input type="number" class="inpu" oninput="inpuo('i-si','six')" id="i-si" value="64" />
-        <input type="number" class="inpu" oninput="inpuo('i-se','seven')" id="i-se" value="22" />
+        <input type="number" class="inpu" oninput="inpuo('i-se','seven')" id="i-se" value="22" /> -->
+        <input type="text" class="input-box" id="input-box" value="49,96,32,128,57,64,22" placeholder="请输入数据" />
+        <button class="btn" id="submit-btn">提交</button>
     </div>
     <div class="inputarea">
-        <button class="btn" onclick="sort()">单步排序演示</button>
+        <button class="btn" id="start">排序演示</button>
         <button class="btn" onclick="location.reload()">重置</button>
     </div>
     <div class="vib">
-        <div class="viewbox" id="dataarea">
-            <div class="blockbox one" id="one">49</div>
-            <div class="blockbox two" id="two">96</div>
-            <div class="blockbox three" id="three">32</div>
-            <div class="blockbox four" id="four">128</div>
-            <div class="blockbox five" id="five">57</div>
-            <div class="blockbox six" id="six">64</div>
-            <div class="blockbox seven" id="seven">22</div>
+        <div class="viewbox" id="val-area">
+            <!-- <div class="blockbox one" id="rec0">49</div>
+            <div class="blockbox two" id="rec1">96</div>
+            <div class="blockbox three" id="rec2">32</div>
+            <div class="blockbox four" id="rec3">128</div>
+            <div class="blockbox five" id="rec4">57</div>
+            <div class="blockbox six" id="rec5">64</div>
+            <div class="blockbox seven" id="rec6">22</div> -->
         </div>
         <div class="point">
-            <span class="pd" id="pointl">↓</span>
-            <span class="ps" id="pointr">↓</span>
+            <span class="pd" id="point-l">↓</span>
+            <span class="ps" id="point-r">↓</span>
             <span class="pp" id="point">■</span>
         </div>
         <div class="bottom">
             <p><span style="color: #ff4747; font-size: 20px;">■</span>： 当前进度</p>
             <p id="desc1">蓝色箭头代表此轮要插入有序列表的数</p>
-            <footer>Copyright lnp 2019</footer>
+            <footer>Copyright lnp 2020</footer>
         </div>
     </div>
-
-
 
 </body>
 
